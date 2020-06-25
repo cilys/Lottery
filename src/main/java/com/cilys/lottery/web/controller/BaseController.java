@@ -101,6 +101,10 @@ public class BaseController extends Controller {
         renderJson(ResUtils.res(code, createTokenByOs(), data));
     }
 
+    public void renderJson(String code, Object data){
+        renderJsonFailed(code, data);
+    }
+
 
     protected int getPageNumber(){
         return getInt(Param.PAGE_NUMBER, 1);

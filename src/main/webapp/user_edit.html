@@ -36,7 +36,7 @@
                   		<span class="x-red">*</span>登录账号
               		</label>
 					<div class="layui-input-block">
-						<input type="text" id="input_user_name" placeholder="请输入登录账号" name="username" 
+						<input type="text" id="input_user_name" placeholder="" disabled="disabled" name="username" 
 							autocomplete="off" class="layui-input" maxlength="32" lay-verify="required" lay-verType="tips">
 					</div>
 
@@ -46,13 +46,13 @@
                   		<span class="x-red"></span>真实姓名
               		</label>
 					<div class="layui-input-block">
-						<input type="text" id="input_real_name" maxlength="64" placeholder="请输入真实姓名" name="real_name" autocomplete="off" class="layui-input">
+						<input type="text" id="input_real_name" maxlength="64" placeholder="" name="realName" autocomplete="off" class="layui-input">
 					</div>
 				</div>
 				<div class="layui-form-item" pane="">
 					<label class="layui-form-label"><span class="x-red"></span>性别</label>
 					<div class="layui-input-block">
-						<input id="radio_sex_male" checked="checked" type="radio" name="sex" lay-skin="primary" value="1" title="男">
+						<input id="radio_sex_male" type="radio" name="sex" lay-skin="primary" value="1" title="男">
 						<input id="radio_sex_female" type="radio" name="sex" lay-skin="primary" value="2" title="女">
 					</div>
 				</div>
@@ -68,7 +68,7 @@
                   		<span class="x-red">*</span>密码
               		</label>
 					<div class="layui-input-block">
-						<input type="password" id="input_pwd" maxlength="16" placeholder="请输入密码(密码6 ～ 16个字符)" name="pass" lay-verify="pass" autocomplete="off" class="layui-input">
+						<input type="password" id="input_pwd" maxlength="16" placeholder="" name="pwd" lay-verify="pass" autocomplete="off" class="layui-input">
 					</div>
 				</div>
 				<div class="layui-form-item">
@@ -76,7 +76,7 @@
                   		<span class="x-red">*</span>确认密码
               		</label>
 					<div class="layui-input-block">
-						<input type="password" id="input_re_pwd" maxlength="16" placeholder="请重复密码" name="repass" lay-verify="repass" autocomplete="off" class="layui-input">
+						<input type="password" id="input_re_pwd" maxlength="16" placeholder="" name="rePwd" lay-verify="repass" autocomplete="off" class="layui-input">
 					</div>
 				</div>
 				
@@ -85,7 +85,7 @@
                   		<span class="x-red"></span>手机号码
               		</label>
 					<div class="layui-input-block">
-						<input type="text" id="input_phone" maxlength="16" placeholder="请输入手机号码" name="phone" autocomplete="off" class="layui-input">
+						<input type="text" id="input_phone" maxlength="16" placeholder="" name="phone" autocomplete="off" class="layui-input">
 					</div>
 				</div>
 				<div class="layui-form-item">
@@ -93,7 +93,7 @@
                   		<span class="x-red"></span>身份证号
               		</label>
 					<div class="layui-input-block">
-						<input type="text" id="input_idCard" maxlength="20" placeholder="请输入身份证号" name="idCard" autocomplete="off" class="layui-input">
+						<input type="text" id="input_idCard" maxlength="20" placeholder="" name="idCard" autocomplete="off" class="layui-input">
 					</div>
 				</div>
 				<div class="layui-form-item">
@@ -101,7 +101,7 @@
                   		<span class="x-red"></span>住址
               		</label>
 					<div class="layui-input-block">
-						<input type="text" id="input_address" maxlength="256" placeholder="请输入住址" name="address" autocomplete="off" class="layui-input">
+						<input type="text" id="input_address" maxlength="256" placeholder="" name="address" autocomplete="off" class="layui-input">
 					</div>
 				</div>
 				<div class="layui-form-item">
@@ -118,7 +118,7 @@
                   		<span class="x-red"></span>银行名称
               		</label>
 					<div class="layui-input-block">
-						<input type="text" id="input_bank_name" maxlength="32" placeholder="请输入银行名称" name="bankName" autocomplete="off" class="layui-input">
+						<input type="text" id="input_bank_name" maxlength="32" placeholder="" name="bankName" autocomplete="off" class="layui-input">
 					</div>
 				</div>
 				<div class="layui-form-item">
@@ -126,7 +126,7 @@
                   		<span class="x-red"></span>银行卡号
               		</label>
 					<div class="layui-input-block">
-						<input type="text" id="input_bank_card" maxlength="32" placeholder="请输入银行卡号" name="bankCard" autocomplete="off" class="layui-input">
+						<input type="text" id="input_bank_card" maxlength="32" placeholder="" name="bankCard" autocomplete="off" class="layui-input">
 					</div>
 				</div>
 				
@@ -134,7 +134,7 @@
 					<label for="btn_add" class="layui-form-label">
               		</label>
 					<button id="btn_add" type="submit" class="layui-btn" lay-filter="add" lay-submit="">
-                  		增加
+                  		更新
               		</button>
 				</div>
 			</form>

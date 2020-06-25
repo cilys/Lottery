@@ -189,7 +189,6 @@ public class UserUtils {
 
     private static Map<String, UserModel> cacheUserMap;
     private static long lastCacheUserTime;
-
     public static String getUserRealNameFromCache(String userId){
         return getUserRealNameFromCache(userId, false);
     }

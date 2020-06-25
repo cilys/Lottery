@@ -6,57 +6,42 @@ $(document).ready(function() {
 	var userId = getUrlParam("userId");
 	getUserInfo();
 
-	$("#btn_add").on("click", function() {
-		var userName = $("#input_user_name").val()
-		if(strIsEmpty(userName)) {
-			showToast("请输入登录账号")
-			return;
-		}
-		var realName = $("#input_real_name").val()
-		var status = $("#cb_status").prop("checked")
-		var pwd = $("#input_pwd").val()
-		if(strIsEmpty(pwd)) {
-			showToast("请输入密码")
-			return;
-		}
-		var rePwd = $("#input_re_pwd").val()
-		if(strIsEmpty(rePwd)) {
-			showToast("请重复密码")
-			return;
-		}
-		if(pwd != rePwd) {
-			showToast("两次密码不一致")
-			return;
-		}
-		var sex = $("input[name='sex']:checked").val()
-		var phone = $("#input_phone").val()
-		var idCard = $("#input_idcard").val()
-		var address = $("#input_address").val()
-
-		updateUserInfo(userName, pwd, realName, sex, phone, address, idCard, status ? "0" : "1")
-	})
-
-	function updateUserInfo(userName, pwd, realName, sex, phone, address, idCard, status) {
-		postBody(getHost() + "sys/user/updateUserInfo", {
-			userName: userName,
-			pwd: pwd,
-			realName: realName,
-//			sex: sex,
-			phone: phone,
-			address: address,
-			idCard: idCard,
-			status: status,
-			userId : userId
-		}, function success(res) {
-			showToast(res.msg)
-			console.log(res.data)
-			if(res.code == 0) {
-				dismissDialog();
-				reloadParent()
+	layui.use('form', function() {
+		var form = layui.form;
+		form.on('submit(add)', function(data) {
+			var jsonData = getFormJsonData("form_data");
+			var pwd = jsonData.pwd;
+			var rePwd = jsonData.rePwd;
+			if(pwd != rePwd){
+				showToast("两次密码不一致")
+				return;
 			}
-		}, function error(err) {
-			showToast("更新用户信息失败，请重试..")
-		})
+			var status = jsonData.status;
+			if(status == undefined){
+				jsonData.status = "1";
+			}else{
+				jsonData.status = "0";
+			}
+			jsonData.userId = userId;
+			
+			updateUserInfo(jsonData);
+			
+			return false;
+		});
+	});
+
+	function updateUserInfo(jsonData) {
+		postBody(getHost() + "sys/user/updateUserInfo?userId=" + userId, 
+			jsonData, function success(res) {
+				showToast(res.msg)
+				console.log(res)
+				if(res.code == 0) {
+					dismissDialog();
+					reloadParent()
+				}
+			}, function error(err) {
+				showToast("更新用户信息失败，请重试..")
+			})
 	}
 
 	function getUserInfo() {
@@ -77,10 +62,15 @@ $(document).ready(function() {
 					
 					$("#input_phone").val(res.data.phone)
 					
-					var userIdentify = res.data.userIdentify;
+					$("#input_idCard").val(res.data.idCard)
+					$("#input_address").val(res.data.address)
 					
-					$("input[name='userIdentify'][value = '" + userIdentify + "']").attr("checked", true)
-				
+					$("#input_left_money").val(fomcatMoney(res.data.leftMoney))
+					$("#input_bank_name").val(res.data.bankName)
+					$("#input_bank_card").val(res.data.bankCard)
+					
+					
+					
 					layui.use("form", function(){
 						var form = layui.form;
 						form.render()
@@ -91,5 +81,12 @@ $(document).ready(function() {
 				showToast("获取用户信息失败，请重试..")
 			}
 		)
+	}
+	
+	function fomcatMoney(b){
+		if(b == null || b.length < 1 || b == '0' || b == '0.0' || b == '0.00'){
+			return '';
+		}
+		return b;
 	}
 })

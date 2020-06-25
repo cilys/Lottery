@@ -8,12 +8,15 @@ import com.cilys.lottery.web.conf.SQLParam;
 import com.cilys.lottery.web.controller.BaseController;
 import com.cilys.lottery.web.interceptor.*;
 import com.cilys.lottery.web.model.UserModel;
+import com.cilys.lottery.web.model.impl.UserImpl;
 import com.cilys.lottery.web.model.impl.UserMoneyFlowImpl;
 import com.cilys.lottery.web.schedu.ScheduUtils;
 import com.cilys.lottery.web.schedu.TaskType;
 import com.cilys.lottery.web.utils.BigDecimalUtils;
 import com.cilys.lottery.web.model.utils.UserUtils;
+import com.cilys.lottery.web.utils.ParamUtils;
 import com.jfinal.aop.Before;
+import com.jfinal.kit.HttpKit;
 
 import java.math.BigDecimal;
 import java.util.HashMap;
@@ -27,29 +30,47 @@ public class SysUserController extends BaseController {
 
     @Before({OptionMethodInterceptor.class})
     public void addUser(){
-        UserUtils.clearUserCache();
-
-        UserUtils.registByJsonData(this, getUserId());
+        try {
+            Map<String, Object> params = ParamUtils.parseJson(HttpKit.readData(getRequest()));
+            String result = UserImpl.addUser(params);
+            if (Param.C_SUCCESS.equals(result)) {
+                UserUtils.clearUserCache();
+            }
+            renderJson(result, null);
+        } catch (Exception e) {
+            Logs.printException(e);
+            renderJsonFailed(Param.C_PARAM_ERROR, null);
+        }
     }
 
-    @Before({UserIdInterceptor.class, UserNameInterceptor.class, PwdInterceptor.class,
-            PhoneInterceptor.class})
+    @Before({UserIdInterceptor.class})
     public void updateUserStatus(){
-        UserUtils.updateUserInfo(this, getUserId(), getParam(SQLParam.USER_ID),
-                getParam(SQLParam.STATUS));
+        renderJson(UserImpl.updateUserStatus(getParam(SQLParam.USER_ID), getParam(SQLParam.STATUS)), null);
     }
 
     @Before({OptionMethodInterceptor.class})
     public void updateUserInfo(){
-        UserUtils.updateUserInfoByJsonData(this, getUserId());
+//        UserUtils.updateUserInfoByJsonData(this, getUserId());
+        try {
+            Map<String, Object> params = ParamUtils.parseJson(HttpKit.readData(getRequest()));
+            String result = UserImpl.updateUserInfo(params, getParam(SQLParam.USER_ID));
+
+            if (Param.C_SUCCESS.equals(result)) {
+                UserUtils.clearUserCache();
+            }
+
+            renderJson(result, null);
+        } catch (Exception e) {
+            Logs.printException(e);
+            renderJsonFailed(Param.C_PARAM_ERROR, null);
+        }
     }
 
     public void getUsers(){
         String osType = getHeader("osType");
 
         renderJsonSuccess(UserModel.getUsersByStatus(getParam(SQLParam.STATUS),
-                getParaToInt(Param.PAGE_NUMBER, 1),
-                getParaToInt(Param.PAGE_SIZE, 10), null, "asc", !"1".equals(osType)));
+                getPageNumber(), getPageSize(), null, "asc", !"1".equals(osType)));
     }
 
     public void getUserCount(){

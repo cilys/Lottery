@@ -10,6 +10,7 @@ public interface PayType {
     String PAY_BANK = "4";      //银联
     String PAY_MONEY = "5";     //现金
 
-    String PAY_SYSTEM_BACK = "6";      //系统退款
-    String PAY_SYSTEM_RECHARGE = "7";  //系统充值
+    String PAY_SYSTEM_BACK = "6";       //系统退款
+    String PAY_SYSTEM_RECHARGE = "7";   //系统充值
+    String PAY_SYSTEM_UPDATE_USER_LEFT_MONEY = "8";     //系统更新用户的余额
 }

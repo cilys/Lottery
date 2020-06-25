@@ -88,6 +88,8 @@ public class UserMoneyFlowImpl {
         param.append(PayType.PAY_SYSTEM_BACK);  //系统退款
         param.append(", ");
         param.append(PayType.PAY_SYSTEM_RECHARGE);  //系统充值
+        param.append(", ");
+        param.append(PayType.PAY_SYSTEM_UPDATE_USER_LEFT_MONEY);  //系统更新用户的余额
         param.append(")");
         param.append(" ");
         param.append("order by ");
@@ -113,8 +115,13 @@ public class UserMoneyFlowImpl {
         String payType = flowModel.get(SQLParam.PAY_TYPE);
         if (!PayType.PAY_YU_E.equals(payType)
                 && !PayType.PAY_SYSTEM_BACK.equals(payType)
-                && !PayType.PAY_SYSTEM_RECHARGE.equals(payType)){
-            //不是余额支付、不是系统退款、不是系统充值，无需更新用户余额，直接返回true
+                && !PayType.PAY_SYSTEM_RECHARGE.equals(payType)
+                && !PayType.PAY_SYSTEM_UPDATE_USER_LEFT_MONEY.equals(payType)){
+            // 不是余额支付
+            // 不是系统退款
+            // 不是系统充值
+            // 不是系统更新用户余额，
+            // 无需更新用户余额，直接返回true
             return true;
         }
         //流水已经同步到账户余额里，则不需要继续同步
@@ -132,12 +139,18 @@ public class UserMoneyFlowImpl {
         if (flowMoney == null){
             return false;
         }
-        BigDecimal userMoney = um.get(SQLParam.LEFT_MONEY);
-        if (userMoney == null){
-            userMoney = BigDecimalUtils.zero();
+
+        //如果是系统更新用户余额，则直接把新的余额更新到表里
+        if (PayType.PAY_SYSTEM_UPDATE_USER_LEFT_MONEY.equals(payType)){
+            um.set(SQLParam.LEFT_MONEY, flowMoney);
+        }else {
+            BigDecimal userMoney = um.get(SQLParam.LEFT_MONEY);
+            if (userMoney == null){
+                userMoney = BigDecimalUtils.zero();
+            }
+            BigDecimal newLeftMoney = BigDecimalUtils.add(userMoney, flowMoney);
+            um.set(SQLParam.LEFT_MONEY, newLeftMoney);
         }
-        BigDecimal newLeftMoney = BigDecimalUtils.add(userMoney, flowMoney);
-        um.set(SQLParam.LEFT_MONEY, newLeftMoney);
         //更新用户账户余额
         boolean updateUserMoney = UserModel.updateUserMoney(um);
         if (updateUserMoney == false){

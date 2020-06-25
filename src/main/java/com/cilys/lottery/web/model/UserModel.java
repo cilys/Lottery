@@ -16,7 +16,7 @@ import java.util.Map;
 /**
  * Created by admin on 2018/1/30.
  */
-public class UserModel extends Model<UserModel> {
+public class UserModel extends BaseModel<UserModel> {
     private static UserModel dao = new UserModel();
 
     public static boolean insert(String userName, String pwd,
@@ -113,21 +113,6 @@ public class UserModel extends Model<UserModel> {
         }else {
             return USER_INFO_UPDATE_FAILURE;
         }
-    }
-
-    private static boolean isEmpty(String... strs){
-        if (strs == null){
-            return true;
-        }
-        if (strs.length < 1){
-            return true;
-        }
-        for (String s : strs){
-            if (!StrUtils.isEmpty(s)){
-                return false;
-            }
-        }
-        return true;
     }
 
     public static Page<UserModel> getUsersByStatus(String status, int pageNumber,
