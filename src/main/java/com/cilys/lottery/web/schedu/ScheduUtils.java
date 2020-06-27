@@ -1,6 +1,8 @@
 package com.cilys.lottery.web.schedu;
 
+import com.cilys.lottery.web.model.OrderModel;
 import com.cilys.lottery.web.model.UserMoneyFlowModel;
+import com.cilys.lottery.web.schedu.runnable.OrderBonusAddToUserMoneyFlowRunnable;
 import com.cilys.lottery.web.schedu.runnable.SyncSingleUserMoneyFlowToUserRunnable;
 import com.cilys.lottery.web.schedu.runnable.SyncTotalUserMoneyFlowToUserRunnable;
 
@@ -40,6 +42,11 @@ public class ScheduUtils {
                 }
             } else if (TaskType.SYNC_TOTAL_USER_MONEY_FLOW_TO_USER.equals(taskType)) {
                 ThreadPools.executeTask(new SyncTotalUserMoneyFlowToUserRunnable());
+            } else if (TaskType.SYNC_BONUS_ADD_USER_MONEY_FLOW.equals(taskType)){
+                Object data = task.getData();
+                if (data != null && data instanceof OrderModel){
+                    ThreadPools.executeTask(new OrderBonusAddToUserMoneyFlowRunnable((OrderModel) data));
+                }
             }
         }
     }

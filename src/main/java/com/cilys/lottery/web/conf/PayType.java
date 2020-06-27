@@ -13,4 +13,6 @@ public interface PayType {
     String PAY_SYSTEM_BACK = "6";       //系统退款
     String PAY_SYSTEM_RECHARGE = "7";   //系统充值
     String PAY_SYSTEM_UPDATE_USER_LEFT_MONEY = "8";     //系统更新用户的余额
+
+    String PAY_SYSTEM_BONUS = "9";      //系统下发奖金
 }

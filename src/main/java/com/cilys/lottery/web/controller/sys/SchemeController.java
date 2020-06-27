@@ -9,11 +9,15 @@ import com.cilys.lottery.web.conf.Param;
 import com.cilys.lottery.web.conf.SQLParam;
 import com.cilys.lottery.web.controller.BaseController;
 import com.cilys.lottery.web.model.SchemeModel;
+import com.cilys.lottery.web.model.impl.OrderImpl;
 import com.cilys.lottery.web.model.impl.SchemeImpl;
 import com.cilys.lottery.web.model.utils.SchemeUtils;
 import com.cilys.lottery.web.model.utils.UserUtils;
+import com.cilys.lottery.web.utils.BigDecimalUtils;
+import com.cilys.lottery.web.utils.ParamUtils;
 import com.jfinal.kit.HttpKit;
 
+import java.math.BigDecimal;
 import java.util.Map;
 import java.util.logging.Logger;
 
@@ -45,14 +49,8 @@ public class SchemeController extends BaseController {
     }
 
     public void add(){
-        String params = HttpKit.readData(getRequest());
-        Logger.getLogger(UserUtils.class.getSimpleName()).info("params = " + params);
-        Logs.sysOut("params = " + params);
-
         try{
-            Map<String, Object> m = JSON.parseObject(params,  new TypeReference<Map<String, Object>>(){}.getType());
-
-
+            Map<String, Object> m = ParamUtils.parseJson(HttpKit.readData(getRequest()));
 
             SchemeModel sm  = new SchemeModel();
             sm.put(m);
@@ -74,7 +72,6 @@ public class SchemeController extends BaseController {
                 renderJsonFailed(Param.C_INSERT_FAILED, null);
             }
         }catch (Exception e){
-            Logger.getLogger(UserUtils.class.getSimpleName()).info("params = " + params);
             Logs.printException(e);
             renderJsonFailed(Param.C_PARAM_ERROR, null);
         }
@@ -209,12 +206,8 @@ public class SchemeController extends BaseController {
     public void updateBonus() {
         int id = getInt(SQLParam.ID);
 
-        String params = HttpKit.readData(getRequest());
-        Logger.getLogger(UserUtils.class.getSimpleName()).info("params = " + params);
-        Logs.sysOut("params = " + params);
         try {
-            Map<String, String> m = JSON.parseObject(params, new TypeReference<Map<String, String>>() {
-            }.getType());
+            Map<String, String> m = ParamUtils.parseJsonToStr(HttpKit.readData(getRequest()));
             renderJsonFailed(SchemeImpl.updateBonus(id, m), null);
         } catch (Exception e) {
             Logs.printException(e);
@@ -222,4 +215,27 @@ public class SchemeController extends BaseController {
         }
     }
 
+    /**
+     * 查询奖金状态
+     */
+    public void queryBonusStatus(){
+        int schemeId = getInt(SQLParam.ID, -1);
+
+        SchemeModel sm = SchemeModel.queryById(schemeId);
+        if (sm == null){
+            renderJsonFailed(Param.C_SCHEME_NOT_EXIST, null);
+            return;
+        }
+
+        BigDecimal canUseBonus = sm.get(SQLParam.CAN_USE_BONUS);
+        if (canUseBonus == null
+                || BigDecimalUtils.noMoreThan(canUseBonus, BigDecimalUtils.zero())) {
+
+            renderJsonFailed(Param.C_NONE_OF_CAN_USE_BONUS, null);
+            return;
+        }
+
+        //订单中，只要有一个人的资金到流水里，就不可修改奖金的状态
+        renderJsonSuccess(OrderImpl.queryBonusStatus(schemeId));
+    }
 }

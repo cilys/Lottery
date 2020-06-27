@@ -10,8 +10,6 @@ import com.cilys.lottery.web.interceptor.*;
 import com.cilys.lottery.web.model.UserModel;
 import com.cilys.lottery.web.model.impl.UserImpl;
 import com.cilys.lottery.web.model.impl.UserMoneyFlowImpl;
-import com.cilys.lottery.web.schedu.ScheduUtils;
-import com.cilys.lottery.web.schedu.TaskType;
 import com.cilys.lottery.web.utils.BigDecimalUtils;
 import com.cilys.lottery.web.model.utils.UserUtils;
 import com.cilys.lottery.web.utils.ParamUtils;

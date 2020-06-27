@@ -23,9 +23,6 @@ public class SchemeImpl {
      * @return
      */
     public static String updateBonus(int id, Map<String, String> params){
-//        if (id == null){
-//            return Param.C_SCHEME_ID_NULL;
-//        }
         if (params == null || params.size() < 1){
             return Param.C_PARAM_ERROR;
         }
@@ -64,8 +61,6 @@ public class SchemeImpl {
 
             if (rate != null){
                 BigDecimal bg100 = BigDecimalUtils.toBigDecimal(100);
-                boolean noLessThan0 = BigDecimalUtils.noLessThan(rate, BigDecimalUtils.zero());
-                boolean noMoreThan100 = BigDecimalUtils.noMoreThan(rate, bg100);
                 if (BigDecimalUtils.noLessThan(rate, BigDecimalUtils.zero())
                         && BigDecimalUtils.noMoreThan(rate, bg100)){
                     m.set(SQLParam.BONUS_RATE, rate);

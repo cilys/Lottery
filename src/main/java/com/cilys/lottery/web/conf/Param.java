@@ -99,7 +99,11 @@ public class Param {
     public final static String C_BUY_MONEY_ILLAGE = "5032";
     public final static String C_BUY_FAILED = "5041";
 
+
     public final static String C_ORDER_NOT_EXIST = "5051";
+    public final static String C_ORDER_ADD_FAILED = "5052";
+
+    public final static String C_NONE_OF_CAN_USE_BONUS = "5061";
 
 
 
@@ -172,8 +176,8 @@ public class Param {
         failureInfo.put(C_ORDER_NOT_EXIST, "该订单不存在");
         failureInfo.put(C_SCHEME_MONEY_ERROR, "方案总金额不合法");
         failureInfo.put(C_RECHARGE_FAILED, "充值失败，请稍后重试..");
-//        failureInfo.put(, );
-//        failureInfo.put(, );
+        failureInfo.put(C_ORDER_ADD_FAILED, "购买失败，请稍后重试..");
+        failureInfo.put(C_NONE_OF_CAN_USE_BONUS, "该方案未分配奖金或可用奖金余额不足");
 //        failureInfo.put(, );
 //        failureInfo.put(, );
 //        failureInfo.put(, );

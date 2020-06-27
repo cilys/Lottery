@@ -17,5 +17,8 @@ public class ParamUtils {
         Logs.sysOut("json参数：" + jsonParam);
         return JSON.parseObject(jsonParam, new TypeReference<Map<String, Object>>(){}.getType());
     }
-
+    public static Map<String, String> parseJsonToStr(String jsonParam) throws Exception {
+        Logs.sysOut("json参数：" + jsonParam);
+        return JSON.parseObject(jsonParam, new TypeReference<Map<String, Object>>(){}.getType());
+    }
 }

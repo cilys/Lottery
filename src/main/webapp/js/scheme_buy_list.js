@@ -114,15 +114,15 @@ $(document).ready(function(){
 					content : doubleBtnInputDialogHtml()
 				});
 				$("#btn_pay").on("click", function(){
-					updateOrderStatus(id, '0');
+					updatePayStatus(id, '0');
 //					layer.closeAll()
 				});
 				$("#btn_unpay").on("click", function(){
-					updateOrderStatus(id, '1');
+					updatePayStatus(id, '1');
 //					layer.closeAll()
 				});
 				$("#btn_back").on("click", function(){
-					updateOrderStatus(id, '2');
+					updatePayStatus(id, '2');
 //					layer.closeAll()
 				});
 			})
@@ -176,8 +176,8 @@ $(document).ready(function(){
 		})
 	}
 	
-	function updateOrderStatus(id, status){
-		post(BASE_URL + "updateOrderStatus",
+	function updatePayStatus(id, status){
+		post(BASE_URL + "updatePayStatus",
 		{
 			id : id
 			, orderStatus : status
@@ -191,6 +191,4 @@ $(document).ready(function(){
 			showToast("更新状态失败，请重试..");
 		})
 	}
-	
-	
 })

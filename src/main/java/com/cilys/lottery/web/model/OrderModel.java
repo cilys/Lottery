@@ -12,7 +12,7 @@ import java.util.Map;
 public class OrderModel extends BaseModel<OrderModel> {
     private static OrderModel dao = new OrderModel();
 
-    public static boolean insert(OrderModel b) {
+    public static boolean insert(OrderModel b) throws Exception{
         if (b == null) {
             return false;
         }
@@ -31,6 +31,14 @@ public class OrderModel extends BaseModel<OrderModel> {
         }else {
             return dao.paginate(pageNumber, pageSize, "select * ",
                     StrUtils.join(" from ", SQLParam.T_ORDER));
+        }
+    }
+
+    public static List<OrderModel> query(String whereParam){
+        if (StrUtils.isEmpty(whereParam)){
+            return queryAll();
+        }else {
+            return dao.find("select * from " + SQLParam.T_ORDER + " where " + whereParam);
         }
     }
 
@@ -147,7 +155,26 @@ public class OrderModel extends BaseModel<OrderModel> {
         this.payOperatorName = payOperatorName;
     }
 
+    /**
+     * 更新订单支付状态
+     * @param m
+     * @return
+     * @throws Exception
+     */
     public static boolean updateOrderStatus(OrderModel m) throws Exception {
+        if (m == null){
+            return false;
+        }
+        return m.update();
+    }
+
+    /**
+     * 更新奖金状态
+     * @param m
+     * @return
+     * @throws Exception
+     */
+    public static boolean updateBonusStatus(OrderModel m) throws Exception {
         if (m == null){
             return false;
         }

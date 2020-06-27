@@ -102,12 +102,12 @@ public class BigDecimalUtils {
             return b1;
         }
 
-        BigDecimal b = b1.divide(b2);
-        if (sourceResult){
-
-        }else {
-            b = setScale(b);
-        }
+        BigDecimal b = b1.divide(b2, 2, BigDecimal.ROUND_DOWN);
+//        if (sourceResult){
+//
+//        }else {
+//            b = setScale(b);
+//        }
         return b;
     }
 
