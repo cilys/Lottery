@@ -2,9 +2,7 @@ package com.cilys.lottery.web.schedu;
 
 import com.cilys.lottery.web.model.OrderModel;
 import com.cilys.lottery.web.model.UserMoneyFlowModel;
-import com.cilys.lottery.web.schedu.runnable.OrderBonusAddToUserMoneyFlowRunnable;
-import com.cilys.lottery.web.schedu.runnable.SyncSingleUserMoneyFlowToUserRunnable;
-import com.cilys.lottery.web.schedu.runnable.SyncTotalUserMoneyFlowToUserRunnable;
+import com.cilys.lottery.web.schedu.runnable.*;
 
 /**
  * Created by admin on 2020/6/24.
@@ -47,6 +45,12 @@ public class ScheduUtils {
                 if (data != null && data instanceof OrderModel){
                     ThreadPools.executeTask(new OrderBonusAddToUserMoneyFlowRunnable((OrderModel) data));
                 }
+            } else if (TaskType.CLEAR_PUT_OF_TIME_LOG.equals(taskType)){
+                ThreadPools.executeTask(new ClearOutOfTimeLogRunnabl());
+            } else if (TaskType.SYNC_USER_INFO_TO_CACHE.equals(taskType)){
+                ThreadPools.executeTask(new SyncUserInfoRunnable());
+            } else if (TaskType.SYNC_SCHEME_SELLED_AND_PAYED_MONEY.equals(taskType)){
+                ThreadPools.executeTask(new SyncSchemeSelledAndPayedMoneyRunnable());
             }
         }
     }

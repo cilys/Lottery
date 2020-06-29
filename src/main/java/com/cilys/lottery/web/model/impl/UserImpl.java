@@ -113,7 +113,7 @@ public class UserImpl {
         }else {
             //不为空，表示需要更新余额
             try{
-                UserMoneyFlowImpl.addToMoneyFlow(targetUserId, null,
+                UserMoneyFlowImpl.addToMoneyFlow(targetUserId, null, null,
                         refreshLeftMoney, SQLParam.SYSTEM, PayType.PAY_SYSTEM_UPDATE_USER_LEFT_MONEY);
             }catch (Exception e){
                 Logs.printException(e);
@@ -127,8 +127,12 @@ public class UserImpl {
 
     }
 
-
-
+    public static UserModel queryByUserName(String userName){
+        if (StrUtils.isEmpty(userName)){
+            return null;
+        }
+        return UserModel.getUserByUserName(userName);
+    }
 
 
 

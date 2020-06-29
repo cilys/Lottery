@@ -1,8 +1,11 @@
 package com.cilys.lottery.web.controller;
 
+import com.alibaba.fastjson.JSON;
 import com.cily.utils.base.log.Logs;
 import com.cilys.lottery.web.conf.Param;
 import com.cilys.lottery.web.conf.SQLParam;
+import com.cilys.lottery.web.log.LogUtils;
+import com.cilys.lottery.web.utils.ParamUtils;
 import com.cilys.lottery.web.utils.ResUtils;
 import com.cilys.lottery.web.model.utils.TokenUtils;
 import com.jfinal.core.Controller;
@@ -90,6 +93,14 @@ public class BaseController extends Controller {
 //        getResponse().setHeader("Access-Control-Allow-Headers", "Content-Type,Access-Token");
         getResponse().setHeader("Access-Control-Allow-Origin", "*");
         getResponse().setHeader("Access-Control-Allow-Headers", "osType, userId, token, roomNumber, Content-Type, Accept");
+
+        String url = getRequest().getRequestURI();
+        url = url.replaceFirst("/", "");
+        url = url.substring(url.indexOf("/"));
+
+        LogUtils.info(getClass().getSimpleName(), null, url,
+                ParamUtils.string(object), getUserId());
+
         super.renderJson(object);
     }
 

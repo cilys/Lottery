@@ -2,12 +2,12 @@ package com.cilys.lottery.web;
 
 import com.cilys.lottery.web.conf.SQLParam;
 import com.cilys.lottery.web.controller.*;
-import com.cilys.lottery.web.controller.sys.SchemeController;
+import com.cilys.lottery.web.controller.sys.SysSchemeController;
 import com.cilys.lottery.web.controller.sys.SysUserController;
+import com.cilys.lottery.web.controller.sys.SysUserMoneyFlowController;
 import com.cilys.lottery.web.interceptor.LogInterceptor;
 import com.cilys.lottery.web.interceptor.OptionMethodInterceptor;
 import com.cilys.lottery.web.model.*;
-import com.cilys.lottery.web.model.impl.UserMoneyFlowImpl;
 import com.cilys.lottery.web.utils.TimerTask;
 import com.jfinal.config.*;
 import com.jfinal.kit.PropKit;
@@ -29,11 +29,10 @@ public class Conf extends JFinalConfig {
         me.add("/", IndexController.class);
         me.add("user", UserController.class);
         me.add("sys/user", SysUserController.class);
-        me.add("sys/scheme", SchemeController.class);
+        me.add("sys/scheme", SysSchemeController.class);
         me.add("order", OrderController.class);
-//        me.add("station", StationController.class);
-//        me.add("line", RoadLineController.class);
-//        me.add("task", CarTaskController.class);
+        me.add("userMoneyFlow", UserMoneyFlowController.class);
+        me.add("sys/userMoneyFlow", SysUserMoneyFlowController.class);
     }
 
     @Override
@@ -56,7 +55,7 @@ public class Conf extends JFinalConfig {
         arp.addMapping(SQLParam.T_UNION_SCHEME, SchemeModel.class);
         arp.addMapping(SQLParam.T_ORDER, OrderModel.class);
         arp.addMapping(SQLParam.T_USER_MONEY_FLOW, UserMoneyFlowModel.class);
-//        arp.addMapping("t_road_line", RoadLineModel.class);
+        arp.addMapping(SQLParam.T_LOG, LogModel.class);
 //        arp.addMapping("t_car_task", CarTaskModel.class);
     }
 

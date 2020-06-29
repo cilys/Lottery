@@ -8,14 +8,16 @@ import java.util.concurrent.*;
  * Created by admin on 2020/6/25.
  */
 public class FixedThreadPools {
-    private static ExecutorService fixedThradPool = createFixedThreadPool(3);
+    private static final RejectedExecutionHandler defaultHandler = new ThreadPoolExecutor.AbortPolicy();
+
+    private static ExecutorService fixedThradPool = null;
 
     public static void executeTask(Runnable runnable){
         if (runnable == null){
             return;
         }
         if (fixedThradPool == null){
-            fixedThradPool = createFixedThreadPool(3);
+            fixedThradPool = createFixedThreadPool(1);
         }
         fixedThradPool.execute(runnable);
     }
@@ -26,8 +28,6 @@ public class FixedThreadPools {
         }
         fixedThradPool = null;
     }
-
-    private static final RejectedExecutionHandler defaultHandler = new ThreadPoolExecutor.AbortPolicy();
     private static ExecutorService createFixedThreadPool(int poolSize){
         return new ThreadPoolExecutor(poolSize, poolSize, 0L, TimeUnit.MILLISECONDS,
                 new LinkedBlockingQueue<Runnable>(), new AssignNameThreadFactory(), defaultHandler);

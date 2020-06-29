@@ -48,6 +48,17 @@ function fomcatPayType(payType){
 	if(payType == 5){
 		return "现金支付";
 	}
-	
+	if(payType == 6){
+		return "系统退款";
+	}
+	if(payType == 7){
+		return "系统充值";
+	}
+	if(payType == 8){
+		return "更新余额";
+	}
+	if(payType == 9){
+		return "所得奖金";
+	}
 	return payType;
 }

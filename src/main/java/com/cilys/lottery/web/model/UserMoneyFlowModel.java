@@ -6,6 +6,7 @@ import com.jfinal.plugin.activerecord.Page;
 
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by admin on 2020/6/24.
@@ -14,10 +15,13 @@ import java.util.List;
 public class UserMoneyFlowModel extends BaseModel<UserMoneyFlowModel> {
     private static UserMoneyFlowModel dao = new UserMoneyFlowModel();
 
-    public synchronized static boolean insert(String userId, Integer orderId, BigDecimal money,
+    public synchronized static boolean insert(String userId, Integer schemeId, Integer orderId, BigDecimal money,
                                  String sourceUserId, String payType) throws Exception {
         UserMoneyFlowModel m = new UserMoneyFlowModel();
         m.set(SQLParam.USER_ID, userId);
+        if (schemeId != null){
+            m.set(SQLParam.SCHEME_ID, schemeId);
+        }
         if (orderId != null){
             m.set(SQLParam.ORDER_ID, orderId);
         }
@@ -50,16 +54,44 @@ public class UserMoneyFlowModel extends BaseModel<UserMoneyFlowModel> {
         return dao.findFirst(query);
     }
 
-    public static Page<UserMoneyFlowModel> query(int pageNumber, int pageSize, String query){
+    public static Page<UserMoneyFlowModel> query(int pageNumber, int pageSize, String query, String orderBy){
+        if (orderBy == null){
+            orderBy = "";
+        }
         if (StrUtils.isEmpty(query)){
-            return dao.paginate(pageNumber, pageSize, "select * ", " from " + SQLParam.T_USER_MONEY_FLOW);
+            return dao.paginate(pageNumber, pageSize, "select * ", " from " + SQLParam.T_USER_MONEY_FLOW + " " + orderBy);
         }else {
             return dao.paginate(pageNumber, pageSize, "select * ",
-                    " from " + SQLParam.T_USER_MONEY_FLOW + " where " + query);
+                    " from " + SQLParam.T_USER_MONEY_FLOW + " where " + query + " " + orderBy);
         }
     }
 
     public static UserMoneyFlowModel queryById(int id) {
         return dao.findById(id);
+    }
+
+    @Override
+    protected Map<String, Object> _getAttrs() {
+        Map<String, Object> map = super._getAttrs();
+        map.put("userRealName", userRealName);
+        map.put("schemeName", schemeName);
+        map.put("sourceUserName", sourceUserName);
+        return map;
+    }
+
+    private String userRealName;
+    private String schemeName;
+    private String sourceUserName;
+
+    public void setUserRealName(String userRealName) {
+        this.userRealName = userRealName;
+    }
+
+    public void setSchemeName(String schemeName) {
+        this.schemeName = schemeName;
+    }
+
+    public void setSourceUserName(String sourceUserName) {
+        this.sourceUserName = sourceUserName;
     }
 }

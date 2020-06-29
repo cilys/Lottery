@@ -1,8 +1,13 @@
 package com.cilys.lottery.web.interceptor;
 
+import com.cily.utils.base.StrUtils;
+import com.cilys.lottery.web.log.LogUtils;
+import com.cilys.lottery.web.utils.ParamUtils;
 import com.jfinal.aop.Invocation;
 
 import java.util.Enumeration;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.logging.Logger;
 
 /**
@@ -11,18 +16,19 @@ import java.util.logging.Logger;
 public class LogInterceptor extends BaseInterceptor {
     @Override
     public void intercept(Invocation inv) {
+        Map<String, Object> map = new HashMap<>();
         Enumeration<String> names = inv.getController().getParaNames();
         while (names.hasMoreElements()){
             String name = names.nextElement();
-            Logger.getLogger(this.getClass().getSimpleName()).info(
-                    "<--->name = " + name + "<--->value = "
-                            + inv.getController().getPara(name));
-            System.out.println("name = " + name + "<-->value = " + inv.getController().getPara(name));
+            map.put(name, inv.getController().getPara(name));
         }
-        System.out.println("requestUrl = " + inv.getActionKey());
-        Logger.getLogger(this.getClass().getSimpleName()).info(
-                "requestUrl = " + inv.getActionKey());
 
+        String actionUrl = inv.getActionKey();
+        if (StrUtils.isEmpty(actionUrl) || actionUrl.equals("/")){
+
+        }else {
+            LogUtils.info(this.getClass().getSimpleName(), null, actionUrl, ParamUtils.string(map), getUserId(inv));
+        }
         inv.invoke();
     }
 }

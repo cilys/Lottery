@@ -9,6 +9,7 @@ import com.cilys.lottery.web.schedu.ScheduUtils;
 import com.cilys.lottery.web.schedu.TaskBean;
 import com.cilys.lottery.web.utils.BigDecimalUtils;
 import com.cilys.lottery.web.model.utils.QueryParam;
+import com.jfinal.plugin.activerecord.Page;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -27,7 +28,7 @@ public class UserMoneyFlowImpl {
      * @return
      * @throws Exception
      */
-    public static boolean addToMoneyFlow(String userId, Integer orderId, BigDecimal money,
+    public static boolean addToMoneyFlow(String userId, Integer SchemeId, Integer orderId, BigDecimal money,
                           String sourceUserId, String payType) throws Exception {
         if (StrUtils.isEmpty(userId)) {
             return false;
@@ -42,7 +43,7 @@ public class UserMoneyFlowImpl {
             return false;
         }
         ScheduUtils.putTask(TaskBean.syncUserMoneyFlowToUser());
-        return UserMoneyFlowModel.insert(userId, orderId, money, sourceUserId, payType);
+        return UserMoneyFlowModel.insert(userId, SchemeId, orderId, money, sourceUserId, payType);
     }
 
     /**
@@ -90,6 +91,8 @@ public class UserMoneyFlowImpl {
         param.append(PayType.PAY_SYSTEM_RECHARGE);  //系统充值
         param.append(", ");
         param.append(PayType.PAY_SYSTEM_UPDATE_USER_LEFT_MONEY);  //系统更新用户的余额
+        param.append(", ");
+        param.append(PayType.PAY_SYSTEM_BONUS);  //系统下发奖金
         param.append(")");
         param.append(" ");
         param.append("order by ");
@@ -116,11 +119,13 @@ public class UserMoneyFlowImpl {
         if (!PayType.PAY_YU_E.equals(payType)
                 && !PayType.PAY_SYSTEM_BACK.equals(payType)
                 && !PayType.PAY_SYSTEM_RECHARGE.equals(payType)
-                && !PayType.PAY_SYSTEM_UPDATE_USER_LEFT_MONEY.equals(payType)){
+                && !PayType.PAY_SYSTEM_UPDATE_USER_LEFT_MONEY.equals(payType)
+                && !PayType.PAY_SYSTEM_BONUS.equals(payType)){
             // 不是余额支付
             // 不是系统退款
             // 不是系统充值
             // 不是系统更新用户余额，
+            // 系统下发奖金
             // 无需更新用户余额，直接返回true
             return true;
         }
@@ -158,5 +163,30 @@ public class UserMoneyFlowImpl {
         }
         //更新该流水的状态
         return updateIsAddToUser(flowModel);
+    }
+
+    public static Page<UserMoneyFlowModel> query(int pageNumber, int pageSize,
+                                                 String userId, String payType,
+                                                 String isAddToUser, String sortColumn, String sort){
+        QueryParam param = new QueryParam();
+        if (!StrUtils.isEmpty(userId)){
+            param.and();
+            param.equal(SQLParam.USER_ID, userId);
+        }
+        if (!StrUtils.isEmpty(payType)){
+            param.and();
+            param.equal(SQLParam.PAY_TYPE, payType);
+        }
+        if (!StrUtils.isEmpty(isAddToUser)){
+            param.and();
+            param.equal(SQLParam.IS_ADD_TO_USER, isAddToUser);
+        }
+        String sql = param.string().trim();
+        sql = sql.replaceFirst("and", "");
+        String orderBy = null;
+        if (!StrUtils.isEmpty(sortColumn) && !StrUtils.isEmpty(sort)) {
+            orderBy = " order by " + sortColumn + " " + sort;
+        }
+        return UserMoneyFlowModel.query(pageNumber, pageSize, sql, orderBy);
     }
 }

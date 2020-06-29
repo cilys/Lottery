@@ -2,13 +2,13 @@ package com.cilys.lottery.web.model.impl;
 
 import com.cily.utils.base.StrUtils;
 import com.cily.utils.base.log.Logs;
+import com.cilys.lottery.web.cache.UserInfoCache;
 import com.cilys.lottery.web.conf.*;
 import com.cilys.lottery.web.model.OrderModel;
 import com.cilys.lottery.web.model.SchemeModel;
 import com.cilys.lottery.web.model.UserModel;
 import com.cilys.lottery.web.model.utils.QueryParam;
 import com.cilys.lottery.web.model.utils.RootUserIdUtils;
-import com.cilys.lottery.web.model.utils.SchemeUtils;
 import com.cilys.lottery.web.model.utils.UserUtils;
 import com.cilys.lottery.web.schedu.ScheduUtils;
 import com.cilys.lottery.web.schedu.TaskType;
@@ -80,7 +80,7 @@ public class OrderImpl {
             //n - n * 2 = -n，整数变复数
             BigDecimal doubleMoney = BigDecimalUtils.multiply(money, BigDecimalUtils.toBigDecimal(2), true);
             BigDecimal flowMoney = BigDecimalUtils.subtract(money, doubleMoney);
-            if (UserMoneyFlowImpl.addToMoneyFlow(userId, id, flowMoney, SQLParam.SYSTEM, payType)){
+            if (UserMoneyFlowImpl.addToMoneyFlow(userId, m.get(SQLParam.SCHEME_ID), id, flowMoney, SQLParam.SYSTEM, payType)){
                 return Param.C_SUCCESS;
             }else{
                 return Param.C_UPDATE_FAILED;
@@ -90,7 +90,7 @@ public class OrderImpl {
             return Param.C_SUCCESS;
         } else if (PayStatus.SYSTEM_BACK.equals(newOrderStatus)){
             //新状态是退款，增加用户账户的余额。只要是退款，无论之前是哪种方式，增加到用户账户里的方式，统统都是系统退款
-            if (UserMoneyFlowImpl.addToMoneyFlow(userId, id, money, SQLParam.SYSTEM, PayStatus.SYSTEM_BACK)){
+            if (UserMoneyFlowImpl.addToMoneyFlow(userId, m.get(SQLParam.SCHEME_ID), id, money, SQLParam.SYSTEM, PayStatus.SYSTEM_BACK)){
                 return Param.C_SUCCESS;
             }else{
                 return Param.C_UPDATE_FAILED;
@@ -166,12 +166,12 @@ public class OrderImpl {
             return Param.C_SCHEME_NOT_EXIST;
         }
         //检测方案状态是否禁售
-        if (SchemeUtils.checkSchemeStatus(schemeModel)){
+        if (SchemeImpl.checkSchemeStatus(schemeModel)){
             return Param.C_SCHEME_DISABLE;
         }
 
         //检测方案是否过期
-        if (SchemeUtils.checkOutOfTime(schemeModel)){
+        if (SchemeImpl.checkOutOfTime(schemeModel)){
             return Param.C_SCHEME_OUT_OF_TIME;
         }
 
@@ -200,7 +200,7 @@ public class OrderImpl {
                         BigDecimal flowMoney = BigDecimalUtils.subtract(money,
                                 BigDecimalUtils.multiply(BigDecimalUtils.toBigDecimal(2), money));
 
-                        UserMoneyFlowImpl.addToMoneyFlow(um.get(SQLParam.USER_ID), sm.get(SQLParam.ID),
+                        UserMoneyFlowImpl.addToMoneyFlow(um.get(SQLParam.USER_ID), sm.get(SQLParam.SCHEME_ID), sm.get(SQLParam.ID),
                                 flowMoney, SQLParam.SYSTEM, PayStatus.PAYED);
 
                         //TODO 更新方案里的已购买的份额、已支付的份额
@@ -232,7 +232,7 @@ public class OrderImpl {
                         if (OrderModel.insert(sm)){
 //                            um.set(SQLParam.LEFT_MONEY, selfMoney.subtract(money));
 //                            UserModel.updateUserLeftMoney(um);
-                            UserMoneyFlowImpl.addToMoneyFlow(um.get(SQLParam.USER_ID), sm.get(SQLParam.ID),
+                            UserMoneyFlowImpl.addToMoneyFlow(um.get(SQLParam.USER_ID), sm.get(SQLParam.SCHEME_ID), sm.get(SQLParam.ID),
                                     BigDecimalUtils.subtract(money, BigDecimalUtils.multiply(BigDecimalUtils.toBigDecimal(2), money)),
                                     SQLParam.SYSTEM, PayStatus.PAYED);
                             //TODO 更新方案里的已购买的份额、已支付的份额
@@ -317,9 +317,9 @@ public class OrderImpl {
                     String operator = m.getStr(SQLParam.OPERATOR);
                     String orderOperator = m.getStr(SQLParam.ORDER_OPERATOR);
 
-                    String cusertomerName = UserUtils.getUserRealNameFromCache(customerId);
-                    String operatorName = UserUtils.getUserRealNameFromCache(operator);
-                    String payOperatorName = UserUtils.getUserRealNameFromCache(orderOperator);
+                    String cusertomerName = UserInfoCache.getUserRealNameFromCache(customerId);
+                    String operatorName = UserInfoCache.getUserRealNameFromCache(operator);
+                    String payOperatorName = UserInfoCache.getUserRealNameFromCache(orderOperator);
 
                     m.setCusertomerName(cusertomerName);
                     m.setOperatorName(operatorName);
@@ -413,7 +413,7 @@ public class OrderImpl {
         }
         m.set(SQLParam.BONUS_STATUS, BonusStatus.BEEN_TO_USER);
         if (OrderModel.updateBonusStatus(m)){
-            return UserMoneyFlowImpl.addToMoneyFlow(m.get(SQLParam.USER_ID),
+            return UserMoneyFlowImpl.addToMoneyFlow(m.get(SQLParam.USER_ID), m.get(SQLParam.SCHEME_ID),
                     m.get(SQLParam.ID), bonusMoney, SQLParam.SYSTEM, PayType.PAY_SYSTEM_BONUS);
         }
         return false;
@@ -443,44 +443,6 @@ public class OrderImpl {
         }
         return String.valueOf(status);
     }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 }

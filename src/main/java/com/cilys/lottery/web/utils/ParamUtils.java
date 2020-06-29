@@ -21,4 +21,17 @@ public class ParamUtils {
         Logs.sysOut("json参数：" + jsonParam);
         return JSON.parseObject(jsonParam, new TypeReference<Map<String, Object>>(){}.getType());
     }
+
+    public static String string(Object obj){
+        if (obj == null){
+            return null;
+        }
+        try{
+            return JSON.toJSONString(obj);
+        }catch (Exception e){
+            Logs.printException(e);
+            return null;
+        }
+    }
+
 }

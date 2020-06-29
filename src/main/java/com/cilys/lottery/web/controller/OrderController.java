@@ -4,6 +4,7 @@ import com.cily.utils.base.log.Logs;
 import com.cilys.lottery.web.conf.Param;
 import com.cilys.lottery.web.conf.SQLParam;
 import com.cilys.lottery.web.interceptor.SchemeIdInterceptor;
+import com.cilys.lottery.web.log.LogUtils;
 import com.cilys.lottery.web.model.impl.OrderImpl;
 import com.cilys.lottery.web.schedu.ScheduUtils;
 import com.cilys.lottery.web.schedu.TaskBean;
@@ -30,7 +31,10 @@ public class OrderController extends BaseController {
             @Override
             public boolean run() throws SQLException {
                 try {
-                    Map<String, Object> m = ParamUtils.parseJson(HttpKit.readData(getRequest()));
+                    String str = HttpKit.readData(getRequest());
+                    LogUtils.info(getClass().getSimpleName(), null, getRequest().getRequestURI(), str, getUserId());
+                    Map<String, Object> m = ParamUtils.parseJson(str);
+
                     String result = OrderImpl.addOrder(m, getUserId());
                     renderJson(result, null);
 
@@ -92,14 +96,5 @@ public class OrderController extends BaseController {
         }else {
             renderJsonFailed(Param.C_UPDATE_FAILED, null);
         }
-    }
-
-    /**
-     * 分配奖金给中奖用户
-     */
-    public void distributionBonus(){
-        int schemeId = getInt(SQLParam.SCHEME_ID, -1);
-        ScheduUtils.putTask(TaskBean.createTask(TaskType.SYNC_SCHEME_BONUS_ADD_USER_MONEY_FLOW, schemeId));
-        renderJsonSuccess(null);
     }
 }

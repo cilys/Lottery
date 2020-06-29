@@ -64,5 +64,14 @@ public interface SQLParam {
     String SOURCE_USER_ID = "sourceUserId";
     String IS_ADD_TO_USER = "isAddToUser";
 
+    String T_LOG = "t_log";
+    String OPERATION_TIME = "operationTime";
+    String ACTION_URL = "actionUrl";
+    String PARAM = "param";
+
     String SYSTEM = "system";
+    String SORT_COLUMN = "sortColumn";
+    String SORT = "sort";
+    String AES = "aes";
+    String DESC = "desc";
 }

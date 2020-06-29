@@ -2,11 +2,13 @@ package com.cilys.lottery.web.controller.sys;
 
 import com.cily.utils.base.StrUtils;
 import com.cily.utils.base.log.Logs;
+import com.cilys.lottery.web.cache.UserInfoCache;
 import com.cilys.lottery.web.conf.Param;
 import com.cilys.lottery.web.conf.PayType;
 import com.cilys.lottery.web.conf.SQLParam;
 import com.cilys.lottery.web.controller.BaseController;
 import com.cilys.lottery.web.interceptor.*;
+import com.cilys.lottery.web.log.LogUtils;
 import com.cilys.lottery.web.model.UserModel;
 import com.cilys.lottery.web.model.impl.UserImpl;
 import com.cilys.lottery.web.model.impl.UserMoneyFlowImpl;
@@ -29,10 +31,14 @@ public class SysUserController extends BaseController {
     @Before({OptionMethodInterceptor.class})
     public void addUser(){
         try {
-            Map<String, Object> params = ParamUtils.parseJson(HttpKit.readData(getRequest()));
+            String str = HttpKit.readData(getRequest());
+            LogUtils.info(getClass().getSimpleName(), null, getRequest().getRequestURI(), str, getUserId());
+
+            Map<String, Object> params = ParamUtils.parseJson(str);
+
             String result = UserImpl.addUser(params);
             if (Param.C_SUCCESS.equals(result)) {
-                UserUtils.clearUserCache();
+                UserInfoCache.clearUserCache();
             }
             renderJson(result, null);
         } catch (Exception e) {
@@ -50,11 +56,14 @@ public class SysUserController extends BaseController {
     public void updateUserInfo(){
 //        UserUtils.updateUserInfoByJsonData(this, getUserId());
         try {
-            Map<String, Object> params = ParamUtils.parseJson(HttpKit.readData(getRequest()));
+            String str = HttpKit.readData(getRequest());
+            LogUtils.info(getClass().getSimpleName(), null, getRequest().getRequestURI(), str, getUserId());
+            Map<String, Object> params = ParamUtils.parseJson(str);
+
             String result = UserImpl.updateUserInfo(params, getParam(SQLParam.USER_ID));
 
             if (Param.C_SUCCESS.equals(result)) {
-                UserUtils.clearUserCache();
+                UserInfoCache.clearUserCache();
             }
 
             renderJson(result, null);
@@ -86,7 +95,7 @@ public class SysUserController extends BaseController {
         String userId = getParam(SQLParam.USER_ID);
         if (UserModel.delByUserId(userId)) {
 
-            UserUtils.clearUserFromCache(userId);
+            UserInfoCache.clearUserFromCache(userId);
 
             renderJsonSuccess(null);
         }else {
@@ -124,7 +133,7 @@ public class SysUserController extends BaseController {
 //            renderJsonFailed(Param.C_UPDATE_FAILED, null);
 //        }
         try{
-            if (UserMoneyFlowImpl.addToMoneyFlow(userId,
+            if (UserMoneyFlowImpl.addToMoneyFlow(userId, null,
                     null, addMoney, SQLParam.SYSTEM, PayType.PAY_SYSTEM_RECHARGE)){
                 renderJsonSuccess(null);
             }else {

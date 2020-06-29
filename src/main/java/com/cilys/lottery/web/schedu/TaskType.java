@@ -12,4 +12,13 @@ public interface TaskType {
     String SYNC_BONUS_ADD_USER_MONEY_FLOW = "SYNC_BONUS_ADD_USER_MONEY_FLOW";
     //把一个方案下所有订单的奖金，同步到资金流水里
     String SYNC_SCHEME_BONUS_ADD_USER_MONEY_FLOW = "SYNC_SCHEME_BONUS_ADD_USER_MONEY_FLOW";
+
+    //删除过期日志
+    String CLEAR_PUT_OF_TIME_LOG = "CLEAR_PUT_OF_TIME_LOG";
+
+    //同步用户信息到缓存里
+    String SYNC_USER_INFO_TO_CACHE = "SYNC_USER_INFO_TO_CACHE";
+
+    //同步方案表中的，已售金额、已付款金额
+    String SYNC_SCHEME_SELLED_AND_PAYED_MONEY = "SYNC_SCHEME_SELLED_AND_PAYED_MONEY";
 }

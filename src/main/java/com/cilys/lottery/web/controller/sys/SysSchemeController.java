@@ -4,17 +4,20 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.TypeReference;
 import com.cily.utils.base.StrUtils;
 import com.cily.utils.base.log.Logs;
-import com.cily.utils.base.time.TimeUtils;
+import com.cilys.lottery.web.cache.SchemeInfoCache;
 import com.cilys.lottery.web.conf.Param;
 import com.cilys.lottery.web.conf.SQLParam;
-import com.cilys.lottery.web.controller.BaseController;
+import com.cilys.lottery.web.controller.SchemeController;
+import com.cilys.lottery.web.interceptor.LogInterceptor;
+import com.cilys.lottery.web.log.LogUtils;
 import com.cilys.lottery.web.model.SchemeModel;
 import com.cilys.lottery.web.model.impl.OrderImpl;
 import com.cilys.lottery.web.model.impl.SchemeImpl;
-import com.cilys.lottery.web.model.utils.SchemeUtils;
 import com.cilys.lottery.web.model.utils.UserUtils;
 import com.cilys.lottery.web.utils.BigDecimalUtils;
 import com.cilys.lottery.web.utils.ParamUtils;
+import com.jfinal.aop.Before;
+import com.jfinal.aop.Clear;
 import com.jfinal.kit.HttpKit;
 
 import java.math.BigDecimal;
@@ -24,33 +27,14 @@ import java.util.logging.Logger;
 /**
  * Created by admin on 2020/6/16.
  */
-public class SchemeController extends BaseController {
-
-    public void queryAll(){
-        String status = getParam(SQLParam.STATUS, null);
-        String outTimeType = getParam("outTimeType", null);
-
-        String currentTime = null;
-
-        if (StrUtils.isEmpty(outTimeType) || "0".equals(outTimeType)){
-            currentTime = TimeUtils.milToStr(System.currentTimeMillis(), null);
-        } else if ("1".equals(outTimeType)){
-            currentTime = TimeUtils.milToStr(System.currentTimeMillis(), null);
-        } else if ("2".equals(outTimeType)){
-            currentTime = null;
-        }
-        String name = getParam(SQLParam.NAME);
-        String orderColunm = SQLParam.OUT_OF_TIME;
-        String order = "DESC";
-//        renderJsonSuccess(SchemeModel.query(getPageNumber(), getPageSize(), status,
-//                currentTime, outTimeType, orderColunm, order));
-        renderJsonSuccess(SchemeImpl.query(getPageNumber(), getPageSize(), status,
-                currentTime, outTimeType, name, orderColunm, order));
-    }
+public class SysSchemeController extends SchemeController {
 
     public void add(){
         try{
-            Map<String, Object> m = ParamUtils.parseJson(HttpKit.readData(getRequest()));
+            String params = HttpKit.readData(getRequest());
+            LogUtils.info(getClass().getSimpleName(), null, getRequest().getRequestURI(), params, getUserId());
+
+            Map<String, Object> m = ParamUtils.parseJson(params);
 
             SchemeModel sm  = new SchemeModel();
             sm.put(m);
@@ -67,6 +51,8 @@ public class SchemeController extends BaseController {
             }
 
             if (SchemeModel.insert(sm)){
+                SchemeInfoCache.clear();
+
                 renderJsonSuccess(null);
             }else {
                 renderJsonFailed(Param.C_INSERT_FAILED, null);
@@ -81,24 +67,24 @@ public class SchemeController extends BaseController {
         int id = getInt(SQLParam.ID);
 
         //判断是否有购买记录，如果有购买记录，则不可删除
-        if (SchemeUtils.checkSelled(id)){
+        if (SchemeImpl.checkSelled(id)){
             renderJsonFailed(Param.C_SCHEME_HAS_SELLED, null);
             return;
         }
         if (SchemeModel.delById(id)){
+            SchemeInfoCache.clear();
+
             renderJsonSuccess(null);
         }else {
             renderJsonFailed(Param.C_DEL_FAILED, null);
         }
-
     }
 
     public void updateInfo(){
         int id = getInt(SQLParam.ID);
 
         String params = HttpKit.readData(getRequest());
-        Logger.getLogger(UserUtils.class.getSimpleName()).info("params = " + params);
-        Logs.sysOut("params = " + params);
+        LogUtils.info(getClass().getSimpleName(), null, getRequest().getRequestURI(), params, getUserId());
 
         try{
             Map<String, Object> m = JSON.parseObject(params,  new TypeReference<Map<String, Object>>(){}.getType());
@@ -115,7 +101,7 @@ public class SchemeController extends BaseController {
 //                return;
 //            }
             //检查方案是否已经被售卖过
-            if (SchemeUtils.checkSelled(id)){
+            if (SchemeImpl.checkSelled(id)){
                 renderJsonFailed(Param.C_SCHEME_HAS_SELLED, null);
                 return;
             }
@@ -148,6 +134,8 @@ public class SchemeController extends BaseController {
             }
 
             if (SchemeModel.updateInfo(sm)){
+                SchemeInfoCache.clear();
+
                 renderJsonSuccess(null);
             }else {
                 renderJsonFailed(Param.C_UPDATE_FAILED, null);
@@ -207,7 +195,10 @@ public class SchemeController extends BaseController {
         int id = getInt(SQLParam.ID);
 
         try {
-            Map<String, String> m = ParamUtils.parseJsonToStr(HttpKit.readData(getRequest()));
+            String params = HttpKit.readData(getRequest());
+            LogUtils.info(getClass().getSimpleName(), null, getRequest().getRequestURI(), params, getUserId());
+
+            Map<String, String> m = ParamUtils.parseJsonToStr(params);
             renderJsonFailed(SchemeImpl.updateBonus(id, m), null);
         } catch (Exception e) {
             Logs.printException(e);

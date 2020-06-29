@@ -1,5 +1,6 @@
 package com.cilys.lottery.web.pools.thread;
 
+import com.cily.utils.base.Sys;
 import com.cilys.lottery.web.pools.runnable.AssignThreadNameRunnable;
 
 import java.util.concurrent.atomic.AtomicInteger;
@@ -24,8 +25,11 @@ public class AssignNameThreadFactory extends BaseThreadFactory {
 
     public Thread newThread(Runnable r) {
         Thread t;
+        System.out.println("---" + (r instanceof AssignThreadNameRunnable));
+        System.out.println("---" + r.getClass().getSimpleName());
         if (r != null && r instanceof AssignThreadNameRunnable){
             String threadName = ((AssignThreadNameRunnable) r).getThreadName();
+
             if (threadName != null && threadName.length() > 0){
                 t = new Thread(group, r, threadName, 0);
             }else {
