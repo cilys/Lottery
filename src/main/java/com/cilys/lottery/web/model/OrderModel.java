@@ -2,6 +2,7 @@ package com.cilys.lottery.web.model;
 
 
 import com.cily.utils.base.StrUtils;
+import com.cily.utils.base.time.TimeUtils;
 import com.cilys.lottery.web.conf.SQLParam;
 import com.jfinal.plugin.activerecord.Page;
 
@@ -16,7 +17,7 @@ public class OrderModel extends BaseModel<OrderModel> {
         if (b == null) {
             return false;
         }
-
+        b.set(SQLParam.CREATE_TIME, TimeUtils.milToStr(System.currentTimeMillis(), null));
         return b.save();
     }
 

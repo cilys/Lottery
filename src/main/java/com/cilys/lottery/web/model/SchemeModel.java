@@ -20,7 +20,9 @@ public class SchemeModel extends BaseModel<SchemeModel> {
         if (b == null) {
             return false;
         }
-
+        String currentTime = TimeUtils.milToStr(System.currentTimeMillis(), null);
+        b.set(SQLParam.CREATE_TIME, currentTime);
+        b.set(SQLParam.UPDATE_TIME, currentTime);
         return b.save();
     }
 
@@ -77,6 +79,7 @@ public class SchemeModel extends BaseModel<SchemeModel> {
         if (b == null) {
             return false;
         }
+        b.set(SQLParam.UPDATE_TIME, TimeUtils.milToStr(System.currentTimeMillis(), null));
         return b.update();
     }
 
@@ -98,6 +101,7 @@ public class SchemeModel extends BaseModel<SchemeModel> {
         if (m != null){
             m.set(SQLParam.PAYED_MONEY, payedMoney);
             m.set(SQLParam.SELLED_MONEY, selledMoney);
+            m.set(SQLParam.UPDATE_TIME, TimeUtils.milToStr(System.currentTimeMillis(), null));
             return m.update();
         }
         return false;

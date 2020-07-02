@@ -80,7 +80,7 @@ public class OrderImpl {
             //n - n * 2 = -n，整数变复数
             BigDecimal doubleMoney = BigDecimalUtils.multiply(money, BigDecimalUtils.toBigDecimal(2), true);
             BigDecimal flowMoney = BigDecimalUtils.subtract(money, doubleMoney);
-            if (UserMoneyFlowImpl.addToMoneyFlow(userId, m.get(SQLParam.SCHEME_ID), id, flowMoney, SQLParam.SYSTEM, payType)){
+            if (UserMoneyFlowImpl.addToMoneyFlow(userId, m.getInt(SQLParam.SCHEME_ID), id, flowMoney, SQLParam.SYSTEM, payType)){
                 return Param.C_SUCCESS;
             }else{
                 return Param.C_UPDATE_FAILED;
@@ -90,7 +90,7 @@ public class OrderImpl {
             return Param.C_SUCCESS;
         } else if (PayStatus.SYSTEM_BACK.equals(newOrderStatus)){
             //新状态是退款，增加用户账户的余额。只要是退款，无论之前是哪种方式，增加到用户账户里的方式，统统都是系统退款
-            if (UserMoneyFlowImpl.addToMoneyFlow(userId, m.get(SQLParam.SCHEME_ID), id, money, SQLParam.SYSTEM, PayStatus.SYSTEM_BACK)){
+            if (UserMoneyFlowImpl.addToMoneyFlow(userId, m.getInt(SQLParam.SCHEME_ID), id, money, SQLParam.SYSTEM, PayStatus.SYSTEM_BACK)){
                 return Param.C_SUCCESS;
             }else{
                 return Param.C_UPDATE_FAILED;
@@ -200,7 +200,7 @@ public class OrderImpl {
                         BigDecimal flowMoney = BigDecimalUtils.subtract(money,
                                 BigDecimalUtils.multiply(BigDecimalUtils.toBigDecimal(2), money));
 
-                        UserMoneyFlowImpl.addToMoneyFlow(um.get(SQLParam.USER_ID), sm.get(SQLParam.SCHEME_ID), sm.get(SQLParam.ID),
+                        UserMoneyFlowImpl.addToMoneyFlow(um.getStr(SQLParam.USER_ID), sm.getInt(SQLParam.SCHEME_ID), sm.getInt(SQLParam.ID),
                                 flowMoney, SQLParam.SYSTEM, PayStatus.PAYED);
 
                         //TODO 更新方案里的已购买的份额、已支付的份额
@@ -232,7 +232,7 @@ public class OrderImpl {
                         if (OrderModel.insert(sm)){
 //                            um.set(SQLParam.LEFT_MONEY, selfMoney.subtract(money));
 //                            UserModel.updateUserLeftMoney(um);
-                            UserMoneyFlowImpl.addToMoneyFlow(um.get(SQLParam.USER_ID), sm.get(SQLParam.SCHEME_ID), sm.get(SQLParam.ID),
+                            UserMoneyFlowImpl.addToMoneyFlow(um.getStr(SQLParam.USER_ID), sm.getInt(SQLParam.SCHEME_ID), sm.getInt(SQLParam.ID),
                                     BigDecimalUtils.subtract(money, BigDecimalUtils.multiply(BigDecimalUtils.toBigDecimal(2), money)),
                                     SQLParam.SYSTEM, PayStatus.PAYED);
                             //TODO 更新方案里的已购买的份额、已支付的份额
@@ -413,8 +413,8 @@ public class OrderImpl {
         }
         m.set(SQLParam.BONUS_STATUS, BonusStatus.BEEN_TO_USER);
         if (OrderModel.updateBonusStatus(m)){
-            return UserMoneyFlowImpl.addToMoneyFlow(m.get(SQLParam.USER_ID), m.get(SQLParam.SCHEME_ID),
-                    m.get(SQLParam.ID), bonusMoney, SQLParam.SYSTEM, PayType.PAY_SYSTEM_BONUS);
+            return UserMoneyFlowImpl.addToMoneyFlow(m.getStr(SQLParam.USER_ID), m.getInt(SQLParam.SCHEME_ID),
+                    m.getInt(SQLParam.ID), bonusMoney, SQLParam.SYSTEM, PayType.PAY_SYSTEM_BONUS);
         }
         return false;
     }

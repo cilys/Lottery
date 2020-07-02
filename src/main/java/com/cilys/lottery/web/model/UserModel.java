@@ -45,6 +45,7 @@ public class UserModel extends BaseModel<UserModel> {
         if (!StrUtils.isEmpty(status)){
             um.set(SQLParam.STATUS, status);
         }
+        um.set(SQLParam.CREATE_TIME, TimeUtils.milToStr(System.currentTimeMillis(), null));
         return um.save();
     }
 
@@ -144,10 +145,10 @@ public class UserModel extends BaseModel<UserModel> {
                 for (UserModel um : result.getList()) {
                     um.remove(SQLParam.PWD);
                     if (encoder) {
-                        um.set(SQLParam.REAL_NAME, formcatRealName(um.get(SQLParam.REAL_NAME, null)));
-                        um.set(SQLParam.PHONE, formcatPhone(um.get(SQLParam.PHONE, null)));
-                        um.set(SQLParam.ID_CARD, formcatIdCard(um.get(SQLParam.ID_CARD, null)));
-                        um.set(SQLParam.ADDRESS, formcatAddress(um.get(SQLParam.ADDRESS, null)));
+                        um.set(SQLParam.REAL_NAME, formcatRealName(um.getStr(SQLParam.REAL_NAME)));
+                        um.set(SQLParam.PHONE, formcatPhone(um.getStr(SQLParam.PHONE)));
+                        um.set(SQLParam.ID_CARD, formcatIdCard(um.getStr(SQLParam.ID_CARD)));
+                        um.set(SQLParam.ADDRESS, formcatAddress(um.getStr(SQLParam.ADDRESS)));
                     }
                 }
             }
@@ -179,10 +180,10 @@ public class UserModel extends BaseModel<UserModel> {
                 for (UserModel um : result.getList()) {
                     um.remove(SQLParam.PWD);
                     if (encoder) {
-                        um.set(SQLParam.PHONE, formcatPhone(um.get(SQLParam.PHONE, null)));
-                        um.set(SQLParam.ID_CARD, formcatIdCard(um.get(SQLParam.ID_CARD, null)));
-                        um.set(SQLParam.ADDRESS, formcatAddress(um.get(SQLParam.ADDRESS, null)));
-                        um.set(SQLParam.REAL_NAME, formcatRealName(um.get(SQLParam.REAL_NAME, null)));
+                        um.set(SQLParam.PHONE, formcatPhone(um.getStr(SQLParam.PHONE)));
+                        um.set(SQLParam.ID_CARD, formcatIdCard(um.getStr(SQLParam.ID_CARD)));
+                        um.set(SQLParam.ADDRESS, formcatAddress(um.getStr(SQLParam.ADDRESS)));
+                        um.set(SQLParam.REAL_NAME, formcatRealName(um.getStr(SQLParam.REAL_NAME)));
                     }
                 }
             }

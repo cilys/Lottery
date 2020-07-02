@@ -1,6 +1,7 @@
 package com.cilys.lottery.web.model;
 
 import com.cily.utils.base.StrUtils;
+import com.cily.utils.base.time.TimeUtils;
 import com.cilys.lottery.web.conf.SQLParam;
 import com.jfinal.plugin.activerecord.Page;
 
@@ -29,7 +30,7 @@ public class UserMoneyFlowModel extends BaseModel<UserMoneyFlowModel> {
         m.set(SQLParam.SOURCE_USER_ID, sourceUserId);
         m.set(SQLParam.PAY_TYPE, payType);
         m.set(SQLParam.IS_ADD_TO_USER, SQLParam.STATUS_DISABLE);
-
+        m.set(SQLParam.CREATE_TIME, TimeUtils.milToStr(System.currentTimeMillis(), null));
         return m.save();
     }
 

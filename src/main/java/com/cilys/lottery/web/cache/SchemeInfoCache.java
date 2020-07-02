@@ -37,7 +37,7 @@ public class SchemeInfoCache {
                 cacheMap = new HashMap<>();
 
                 for (SchemeModel u : ls){
-                    cacheMap.put(u.get(SQLParam.ID), u);
+                    cacheMap.put(u.getInt(SQLParam.ID), u);
                 }
                 lastCacheUserTime = System.currentTimeMillis();
             }
