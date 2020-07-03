@@ -1,7 +1,7 @@
 package com.cilys.lottery.web.schedu.runnable;
 
 
-import com.cilys.lottery.web.cache.UserInfoCache;
+import com.cilys.lottery.web.cache1.UserInfoCache;
 
 /**
  * Created by admin on 2020/6/29.

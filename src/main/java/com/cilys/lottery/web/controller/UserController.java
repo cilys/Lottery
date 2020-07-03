@@ -1,20 +1,13 @@
 package com.cilys.lottery.web.controller;
 
-import com.alibaba.fastjson.JSON;
-import com.cily.utils.base.StrUtils;
-import com.cilys.lottery.web.cache.UserInfoCache;
 import com.cilys.lottery.web.conf.Param;
 import com.cilys.lottery.web.conf.SQLParam;
-import com.cilys.lottery.web.interceptor.*;
+import com.cilys.lottery.web.interceptor.UserIdInterceptor;
 import com.cilys.lottery.web.model.UserModel;
 import com.cilys.lottery.web.model.impl.UserImpl;
 import com.cilys.lottery.web.utils.ResUtils;
 import com.cilys.lottery.web.model.utils.TokenUtils;
-import com.cilys.lottery.web.model.utils.UserUtils;
 import com.jfinal.aop.Before;
-import com.jfinal.aop.Clear;
-
-import java.util.List;
 
 /**
  * Created by admin on 2018/1/30.
@@ -79,20 +72,20 @@ public class UserController extends BaseController {
 //                getParaToInt(Param.PAGE_SIZE, 10), searchText, !"1".equals(getHeader("osType"))));
 //    }
 //
-//    @Before({UserIdInterceptor.class})
-//    public void userInfo(){
-//        String userId = getParam(SQLParam.USER_ID);
-//        UserModel um = UserModel.getUserByUserId(userId);
-//        String osType = getHeader("osType");
-////        um.remove(SQLParam.PWD);
-//        if (!"1".equals(osType)) {
-//            um.set(SQLParam.REAL_NAME, UserModel.formcatRealName(um.get(SQLParam.REAL_NAME, null)));
-//            um.set(SQLParam.PHONE, UserModel.formcatPhone(um.get(SQLParam.PHONE, null)));
-//            um.set(SQLParam.ID_CARD, UserModel.formcatIdCard(um.get(SQLParam.ID_CARD, null)));
-//            um.set(SQLParam.ADDRESS, UserModel.formcatAddress(um.get(SQLParam.ADDRESS, null)));
-//        }
-//        renderJsonSuccess(um);
-//    }
+    @Before({UserIdInterceptor.class})
+    public void userInfo(){
+        String userId = getParam(SQLParam.USER_ID);
+        UserModel um = UserModel.getUserByUserId(userId);
+        String osType = getHeader("osType");
+//        um.remove(SQLParam.PWD);
+        if (!"1".equals(osType)) {
+            um.set(SQLParam.REAL_NAME, UserModel.formcatRealName(um.getStr(SQLParam.REAL_NAME)));
+            um.set(SQLParam.PHONE, UserModel.formcatPhone(um.getStr(SQLParam.PHONE)));
+            um.set(SQLParam.ID_CARD, UserModel.formcatIdCard(um.getStr(SQLParam.ID_CARD)));
+            um.set(SQLParam.ADDRESS, UserModel.formcatAddress(um.getStr(SQLParam.ADDRESS)));
+        }
+        renderJsonSuccess(um);
+    }
 //
 //    @Before({PwdInterceptor.class})
 //    public void changePwd(){

@@ -2,7 +2,7 @@ package com.cilys.lottery.web.controller.sys;
 
 import com.cily.utils.base.StrUtils;
 import com.cily.utils.base.log.Logs;
-import com.cilys.lottery.web.cache.UserInfoCache;
+import com.cilys.lottery.web.cache1.UserInfoCache;
 import com.cilys.lottery.web.conf.Param;
 import com.cilys.lottery.web.conf.PayType;
 import com.cilys.lottery.web.conf.SQLParam;
@@ -13,7 +13,6 @@ import com.cilys.lottery.web.model.UserModel;
 import com.cilys.lottery.web.model.impl.UserImpl;
 import com.cilys.lottery.web.model.impl.UserMoneyFlowImpl;
 import com.cilys.lottery.web.utils.BigDecimalUtils;
-import com.cilys.lottery.web.model.utils.UserUtils;
 import com.cilys.lottery.web.utils.ParamUtils;
 import com.jfinal.aop.Before;
 import com.jfinal.kit.HttpKit;

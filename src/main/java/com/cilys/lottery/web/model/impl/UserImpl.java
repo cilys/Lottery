@@ -1,6 +1,7 @@
 package com.cilys.lottery.web.model.impl;
 
 import com.cily.utils.base.StrUtils;
+import com.cily.utils.base.UUIDUtils;
 import com.cily.utils.base.log.Logs;
 import com.cilys.lottery.web.conf.Param;
 import com.cilys.lottery.web.conf.PayType;
@@ -21,12 +22,15 @@ public class UserImpl {
         if (params == null || params.size() < 1){
             return Param.C_PARAM_ERROR;
         }
+        params.remove("rePwd");
         UserModel um = new UserModel();
         um.put(params);
         um.removeNullValueAttrs();
 
+
         //初始增加用户，则没有资金余额
         um.remove(SQLParam.LEFT_MONEY);
+        um.set(SQLParam.USER_ID, UUIDUtils.getUUID());
 
         if (UserModel.getUserByUserName(um.getStr(SQLParam.USER_NAME)) != null){
             return Param.C_RESIGT_USER_EXISTS;

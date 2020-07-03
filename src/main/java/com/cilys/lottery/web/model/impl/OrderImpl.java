@@ -2,7 +2,7 @@ package com.cilys.lottery.web.model.impl;
 
 import com.cily.utils.base.StrUtils;
 import com.cily.utils.base.log.Logs;
-import com.cilys.lottery.web.cache.UserInfoCache;
+import com.cilys.lottery.web.cache1.UserInfoCache;
 import com.cilys.lottery.web.conf.*;
 import com.cilys.lottery.web.model.OrderModel;
 import com.cilys.lottery.web.model.SchemeModel;

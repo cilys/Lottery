@@ -1,4 +1,4 @@
-package com.cilys.lottery.web.cache;
+package com.cilys.lottery.web.cache1;
 
 import com.cilys.lottery.web.conf.SQLParam;
 import com.cilys.lottery.web.model.SchemeModel;

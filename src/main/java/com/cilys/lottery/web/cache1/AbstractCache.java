@@ -1,6 +1,4 @@
-package com.cilys.lottery.web.cache;
-
-import java.util.Map;
+package com.cilys.lottery.web.cache1;
 
 /**
  * Created by admin on 2020/6/27.
