@@ -31,6 +31,7 @@ public class Param {
     public final static String C_USER_OR_PWD_ERROR = "1006";
     public final static String C_USER_NAME_NULL = "1011";
     public final static String C_USER_NAME_ILLAGLE = "1012";
+    public final static String C_USER_DISABLE = "1013";
 
     public final static String C_USER_DEL_FAILED = "1021";
     public final static String C_USER_LEFT_MONEY_NOT_ENTHOH = "5022";
@@ -178,7 +179,7 @@ public class Param {
         failureInfo.put(C_RECHARGE_FAILED, "充值失败，请稍后重试..");
         failureInfo.put(C_ORDER_ADD_FAILED, "购买失败，请稍后重试..");
         failureInfo.put(C_NONE_OF_CAN_USE_BONUS, "该方案未分配奖金或可用奖金余额不足");
-//        failureInfo.put(, );
+        failureInfo.put(C_USER_DISABLE, "该用户未生效，请联系店主审核");
 //        failureInfo.put(, );
 //        failureInfo.put(, );
 //        failureInfo.put(, );

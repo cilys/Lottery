@@ -56,4 +56,12 @@ public class BaseModel<M extends BaseModel> extends Model<M> {
         }
         return super.put(map);
     }
+
+    public String getStr(String attr, String defValue) {
+        String str = super.getStr(attr);
+        if (str == null){
+            return defValue;
+        }
+        return str;
+    }
 }

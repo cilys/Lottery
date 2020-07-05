@@ -1,6 +1,6 @@
 function getHost(){
-	  // return "http://localhost:8080/lottery/";
-	return "http://boyg.v228.10000net.cn/lottery/";
+	  return "http://localhost:8080/lottery/";
+	// return "http://boyg.v228.10000net.cn/lottery/";
 }
 
 function getWebSocketHost(){

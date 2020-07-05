@@ -30,6 +30,7 @@ public class Conf extends JFinalConfig {
         me.add("user", UserController.class);
         me.add("sys/user", SysUserController.class);
         me.add("sys/scheme", SysSchemeController.class);
+        me.add("scheme", SchemeController.class);
         me.add("order", OrderController.class);
         me.add("userMoneyFlow", UserMoneyFlowController.class);
         me.add("sys/userMoneyFlow", SysUserMoneyFlowController.class);

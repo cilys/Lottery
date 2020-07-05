@@ -1,13 +1,21 @@
 package com.cilys.lottery.web.controller;
 
+import com.cily.utils.base.log.Logs;
+import com.cilys.lottery.web.cache1.UserInfoCache;
 import com.cilys.lottery.web.conf.Param;
 import com.cilys.lottery.web.conf.SQLParam;
 import com.cilys.lottery.web.interceptor.UserIdInterceptor;
+import com.cilys.lottery.web.log.LogUtils;
 import com.cilys.lottery.web.model.UserModel;
 import com.cilys.lottery.web.model.impl.UserImpl;
+import com.cilys.lottery.web.model.utils.RootUserIdUtils;
+import com.cilys.lottery.web.utils.ParamUtils;
 import com.cilys.lottery.web.utils.ResUtils;
 import com.cilys.lottery.web.model.utils.TokenUtils;
 import com.jfinal.aop.Before;
+import com.jfinal.kit.HttpKit;
+
+import java.util.Map;
 
 /**
  * Created by admin on 2018/1/30.
@@ -142,16 +150,26 @@ public class UserController extends BaseController {
             um.remove(SQLParam.PWD);
 
             if (Param.REQUEST_SOURCE_WEB.equals(getHeader(Param.OS_TYPE))) {
-//                if (RootUserIdUtils.isRootUser(um.get(SQLParam.USER_ID))) {
+                if (RootUserIdUtils.isRootUser(um.getStr(SQLParam.USER_ID))) {
+//                    String status = um.getStr(SQLParam.STATUS, SQLParam.STATUS_DISABLE);
+//                    if (SQLParam.STATUS_ENABLE.equals(status)){
+                        String token = TokenUtils.createToken(um.getStr(SQLParam.USER_ID), deviceImei, null);
+                        renderJson(ResUtils.success(token, um));
+//                    } else {
+//                        renderJsonFailed(Param.C_USER_DISABLE, null);
+//                    }
+                    return;
+                }else {
+                    renderJsonFailed(Param.C_RIGHT_LOW, null);
+                }
+            }else {
+                String status = um.getStr(SQLParam.STATUS, SQLParam.STATUS_DISABLE);
+                if (SQLParam.STATUS_ENABLE.equals(status)){
                     String token = TokenUtils.createToken(um.getStr(SQLParam.USER_ID), deviceImei, null);
                     renderJson(ResUtils.success(token, um));
-                    return;
-//                }else {
-//                    renderJsonFailed(Param.C_RIGHT_LOW, null);
-//                }
-            }else {
-                String token = TokenUtils.createToken(um.getStr(SQLParam.USER_ID), deviceImei, null);
-                renderJson(ResUtils.success(token, um));
+                } else {
+                    renderJsonFailed(Param.C_USER_DISABLE, null);
+                }
             }
             return;
         }else {
@@ -162,5 +180,25 @@ public class UserController extends BaseController {
 
     protected boolean checkUserIsRoot(String userId){
         return false;
+    }
+
+    public void regist(){
+        try {
+            String str = HttpKit.readData(getRequest());
+            LogUtils.info(getClass().getSimpleName(), null, getRequest().getRequestURI(), str, getUserId());
+
+            Map<String, Object> params = ParamUtils.parseJson(str);
+            params.remove(SQLParam.STATUS);
+            params.remove(SQLParam.LEFT_MONEY);
+
+            String result = UserImpl.addUser(params);
+            if (Param.C_SUCCESS.equals(result)) {
+                UserInfoCache.clearUserCache();
+            }
+            renderJson(result, null);
+        } catch (Exception e) {
+            Logs.printException(e);
+            renderJsonFailed(Param.C_PARAM_ERROR, null);
+        }
     }
 }
