@@ -57,14 +57,17 @@ public class UserMoneyFlowController extends BaseController {
         if (datas != null && datas.getList() != null){
             for (UserMoneyFlowModel m : datas.getList()){
                 String userRealName = UserInfoCache.getUserRealNameFromCache(m.getStr(SQLParam.USER_ID));
-                String sourceUserId = m.get(SQLParam.SOURCE_USER_ID);
+                String sourceUserId = m.getStr(SQLParam.SOURCE_USER_ID);
                 String sourceUserName = "系统";
                 if (SQLParam.SYSTEM.equalsIgnoreCase(sourceUserId)){
 
                 } else {
                     sourceUserName = UserInfoCache.getUserRealNameFromCache(sourceUserId);
                 }
-                Integer schemeId = m.get(SQLParam.SCHEME_ID);
+                Integer schemeId = m.getInt(SQLParam.SCHEME_ID);
+                if (schemeId == null){
+                    schemeId = -1;
+                }
                 m.setUserRealName(userRealName);
                 m.setSourceUserName(sourceUserName);
                 if (schemeId != null) {

@@ -41,11 +41,15 @@ public class TokenModel extends Model<TokenModel> {
         if (m == null){
             return Param.C_USER_NOT_LOGIN;
         }else {
-            String to = m.get(SQLParam.TOKEN, null);
+            String to = m.getStr(SQLParam.TOKEN);
             if (StrUtils.isEmpty(to)){
                 return Param.C_USER_NOT_LOGIN;
             }else {
-                long updateTime = m.get(SQLParam.UPDATE_TIME, 0);
+                Long updateTime = m.getLong(SQLParam.UPDATE_TIME);
+                if (updateTime == null){
+                    updateTime = 0L;
+                }
+
                 if (System.currentTimeMillis() - updateTime >= PropKit.getLong("tokenOutTime", 180000L)){
                     //已超时
                     deleteByUserId(userId);

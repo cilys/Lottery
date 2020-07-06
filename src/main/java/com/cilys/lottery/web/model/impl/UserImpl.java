@@ -78,7 +78,7 @@ public class UserImpl {
         params.remove("rePwd");
         params.remove(SQLParam.USER_ID);
 
-        BigDecimal oldLeftMoney = um.get(SQLParam.LEFT_MONEY);
+        BigDecimal oldLeftMoney = um.getBigDecimal(SQLParam.LEFT_MONEY);
         String newLm = (String)params.get(SQLParam.LEFT_MONEY);
         BigDecimal newLeftMoney = BigDecimalUtils.toBigDecimal(newLm);
         if (newLeftMoney == null){

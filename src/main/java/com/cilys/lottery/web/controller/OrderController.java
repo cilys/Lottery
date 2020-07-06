@@ -1,5 +1,6 @@
 package com.cilys.lottery.web.controller;
 
+import com.cily.utils.base.StrUtils;
 import com.cily.utils.base.log.Logs;
 import com.cilys.lottery.web.conf.Param;
 import com.cilys.lottery.web.conf.SQLParam;
@@ -34,6 +35,11 @@ public class OrderController extends BaseController {
                     String str = HttpKit.readData(getRequest());
                     LogUtils.info(getClass().getSimpleName(), null, getRequest().getRequestURI(), str, getUserId());
                     Map<String, Object> m = ParamUtils.parseJson(str);
+                    String customId = (String)m.get(SQLParam.CUSTOMER_ID);
+                    if (StrUtils.isEmpty(customId)){
+                        customId = getUserId();
+                        m.put(SQLParam.CUSTOMER_ID, customId);
+                    }
 
                     String result = OrderImpl.addOrder(m, getUserId());
                     renderJson(result, null);
@@ -55,9 +61,10 @@ public class OrderController extends BaseController {
     public void query(){
         String orderStatus = getParam(SQLParam.ORDER_STATUS);
         String payType = getParam(SQLParam.PAY_TYPE);
-        int schemeId = getInt(SQLParam.SCHEME_ID);
+        int schemeId = getInt(SQLParam.SCHEME_ID, -1);
+        String customerId = getParam(SQLParam.CUSTOMER_ID, null);
 
-        renderJsonSuccess(OrderImpl.query(schemeId, orderStatus,
+        renderJsonSuccess(OrderImpl.query(schemeId, customerId, orderStatus,
                 payType, getPageNumber(), getPageSize()));
     }
 

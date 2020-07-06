@@ -115,7 +115,7 @@ public class UserMoneyFlowImpl {
         if (flowModel == null) {
             return false;
         }
-        String payType = flowModel.get(SQLParam.PAY_TYPE);
+        String payType = flowModel.getStr(SQLParam.PAY_TYPE);
         if (!PayType.PAY_YU_E.equals(payType)
                 && !PayType.PAY_SYSTEM_BACK.equals(payType)
                 && !PayType.PAY_SYSTEM_RECHARGE.equals(payType)
@@ -130,12 +130,12 @@ public class UserMoneyFlowImpl {
             return true;
         }
         //流水已经同步到账户余额里，则不需要继续同步
-        String isAddToUser = flowModel.get(SQLParam.IS_ADD_TO_USER);
+        String isAddToUser = flowModel.getStr(SQLParam.IS_ADD_TO_USER);
         if (SQLParam.STATUS_ENABLE.equals(isAddToUser)){
             return true;
         }
 
-        String userId = flowModel.get(SQLParam.USER_ID);
+        String userId = flowModel.getStr(SQLParam.USER_ID);
         UserModel um = UserModel.getUserByUserId(userId);
         if (um == null){
             return false;
@@ -149,7 +149,7 @@ public class UserMoneyFlowImpl {
         if (PayType.PAY_SYSTEM_UPDATE_USER_LEFT_MONEY.equals(payType)){
             um.set(SQLParam.LEFT_MONEY, flowMoney);
         }else {
-            BigDecimal userMoney = um.get(SQLParam.LEFT_MONEY);
+            BigDecimal userMoney = um.getBigDecimal(SQLParam.LEFT_MONEY);
             if (userMoney == null){
                 userMoney = BigDecimalUtils.zero();
             }

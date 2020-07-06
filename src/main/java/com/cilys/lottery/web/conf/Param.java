@@ -104,7 +104,7 @@ public class Param {
     public final static String C_ORDER_NOT_EXIST = "5051";
     public final static String C_ORDER_ADD_FAILED = "5052";
 
-    public final static String C_NONE_OF_CAN_USE_BONUS = "5061";
+    public final static String C_NONE_OF_CAN_USE_BONUS = "5071";
 
 
 

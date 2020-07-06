@@ -146,7 +146,7 @@ public class UserController extends BaseController {
             return;
         }
 
-        if (pwd.equals(um.get(SQLParam.PWD))){
+        if (pwd.equals(um.getStr(SQLParam.PWD))){
             um.remove(SQLParam.PWD);
 
             if (Param.REQUEST_SOURCE_WEB.equals(getHeader(Param.OS_TYPE))) {
@@ -195,6 +195,26 @@ public class UserController extends BaseController {
             if (Param.C_SUCCESS.equals(result)) {
                 UserInfoCache.clearUserCache();
             }
+            renderJson(result, null);
+        } catch (Exception e) {
+            Logs.printException(e);
+            renderJsonFailed(Param.C_PARAM_ERROR, null);
+        }
+    }
+
+    public void updateUserInfo(){
+//        UserUtils.updateUserInfoByJsonData(this, getUserId());
+        try {
+            String str = HttpKit.readData(getRequest());
+            LogUtils.info(getClass().getSimpleName(), null, getRequest().getRequestURI(), str, getUserId());
+            Map<String, Object> params = ParamUtils.parseJson(str);
+
+            String result = UserImpl.updateUserInfo(params, getParam(SQLParam.USER_ID));
+
+            if (Param.C_SUCCESS.equals(result)) {
+                UserInfoCache.clearUserCache();
+            }
+
             renderJson(result, null);
         } catch (Exception e) {
             Logs.printException(e);

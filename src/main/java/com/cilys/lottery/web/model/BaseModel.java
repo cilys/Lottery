@@ -1,6 +1,7 @@
 package com.cilys.lottery.web.model;
 
 import com.cily.utils.base.StrUtils;
+import com.cily.utils.base.log.Logs;
 import com.jfinal.plugin.activerecord.Model;
 
 import java.util.Iterator;
@@ -63,5 +64,23 @@ public class BaseModel<M extends BaseModel> extends Model<M> {
             return defValue;
         }
         return str;
+    }
+
+    @Override
+    public Integer getInt(String attr) {
+        return getInt(attr, -1);
+    }
+
+    public Integer getInt(String attr, Integer defValue) {
+        String str = getStr(attr, null);
+        if (str == null){
+            return defValue;
+        }
+        try {
+            return Integer.parseInt(str);
+        }catch (NumberFormatException e){
+            Logs.printException(e);
+            return defValue;
+        }
     }
 }

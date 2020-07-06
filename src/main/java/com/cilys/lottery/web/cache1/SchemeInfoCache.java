@@ -58,6 +58,6 @@ public class SchemeInfoCache {
         if (m == null){
             return null;
         }
-        return m.get(SQLParam.NAME);
+        return m.getStr(SQLParam.NAME);
     }
 }

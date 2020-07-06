@@ -38,7 +38,7 @@ public class OrderImpl {
             return false;
         }
         for (OrderModel m : ls){
-            String bonusStatus = m.get(SQLParam.BONUS_STATUS);
+            String bonusStatus = m.getStr(SQLParam.BONUS_STATUS);
             if (BonusStatus.BEEN_TO_USER.equals(bonusStatus)){
                 return true;
             }
@@ -58,11 +58,11 @@ public class OrderImpl {
         if (m == null){
             return Param.C_ORDER_NOT_EXIST;
         }
-        String oldOrderStatus = m.get(SQLParam.ORDER_STATUS);
+        String oldOrderStatus = m.getStr(SQLParam.ORDER_STATUS);
         if (oldOrderStatus.equals(newOrderStatus)){
             return Param.C_NONE_FOR_UPDATE;
         }
-        BigDecimal money = m.get(SQLParam.MONEY);
+        BigDecimal money = m.getBigDecimal(SQLParam.MONEY);
         if (money == null){
             return Param.C_SCHEME_MONEY_ERROR;
         }
@@ -72,8 +72,8 @@ public class OrderImpl {
         if (!updateOrderStatus) {
             return Param.C_UPDATE_FAILED;
         }
-        String payType = m.get(SQLParam.PAY_TYPE);
-        String userId = m.get(SQLParam.CUSTOMER_ID);
+        String payType = m.getStr(SQLParam.PAY_TYPE);
+        String userId = m.getStr(SQLParam.CUSTOMER_ID);
 
         if (PayStatus.PAYED.equals(newOrderStatus)){
             //新状态为支付状态，对用户是付款，金钱减少
@@ -128,6 +128,11 @@ public class OrderImpl {
         String customerId = sm.getStr(SQLParam.CUSTOMER_ID);    //客户id
         String operator = sm.getStr(SQLParam.OPERATOR);         //购买操作者id
         String payOperator = sm.getStr(SQLParam.ORDER_OPERATOR);  //支付操作者id
+
+        if (StrUtils.isEmpty(customerId)){
+            customerId = headUserId;
+            sm.set(SQLParam.CUSTOMER_ID, customerId);
+        }
 
         if (StrUtils.isEmpty(customerId)){
             return Param.C_CUSTOMER_ID_NULL;
@@ -201,7 +206,7 @@ public class OrderImpl {
                                 BigDecimalUtils.multiply(BigDecimalUtils.toBigDecimal(2), money));
 
                         UserMoneyFlowImpl.addToMoneyFlow(um.getStr(SQLParam.USER_ID), sm.getInt(SQLParam.SCHEME_ID), sm.getInt(SQLParam.ID),
-                                flowMoney, SQLParam.SYSTEM, PayStatus.PAYED);
+                                flowMoney, SQLParam.SYSTEM, payType);
 
                         //TODO 更新方案里的已购买的份额、已支付的份额
                         BigDecimal selledM = selledMoney.add(money);
@@ -234,7 +239,7 @@ public class OrderImpl {
 //                            UserModel.updateUserLeftMoney(um);
                             UserMoneyFlowImpl.addToMoneyFlow(um.getStr(SQLParam.USER_ID), sm.getInt(SQLParam.SCHEME_ID), sm.getInt(SQLParam.ID),
                                     BigDecimalUtils.subtract(money, BigDecimalUtils.multiply(BigDecimalUtils.toBigDecimal(2), money)),
-                                    SQLParam.SYSTEM, PayStatus.PAYED);
+                                    SQLParam.SYSTEM, payType);
                             //TODO 更新方案里的已购买的份额、已支付的份额
 
                             //TODO 更新方案里的已购买的份额、已支付的份额
@@ -288,12 +293,23 @@ public class OrderImpl {
      * @param pageSize
      * @return
      */
-    public static Page<OrderModel> query(int schemeId, String orderStatus, String payType,
+    public static Page<OrderModel> query(int schemeId, String userId, String orderStatus, String payType,
                                          int pageNumber, int pageSize){
-
-
         QueryParam queryParam = new QueryParam();
-        queryParam.equal(SQLParam.SCHEME_ID, schemeId);
+        if (schemeId < 0){
+            if (!StrUtils.isEmpty(userId)){
+                queryParam.equal(SQLParam.CUSTOMER_ID, userId);
+            }
+        }else {
+            queryParam.equal(SQLParam.SCHEME_ID, schemeId);
+
+            if (!StrUtils.isEmpty(userId)){
+                queryParam.and();
+                queryParam.equal(SQLParam.CUSTOMER_ID, userId);
+            }
+        }
+
+
 
         if (!StrUtils.isEmpty(orderStatus)){
             queryParam.and();
@@ -350,7 +366,7 @@ public class OrderImpl {
         if (sm == null){
             return false;
         }
-        BigDecimal canUseBonus = sm.get(SQLParam.CAN_USE_BONUS);
+        BigDecimal canUseBonus = sm.getBigDecimal(SQLParam.CAN_USE_BONUS);
         if (canUseBonus == null){
             return false;
         }
@@ -367,7 +383,7 @@ public class OrderImpl {
                 return false;
             }
             for (OrderModel m : ls){
-                BigDecimal payed = m.get(SQLParam.MONEY);
+                BigDecimal payed = m.getBigDecimal(SQLParam.MONEY);
                 //计算出资人的出资比例
                 if (BigDecimalUtils.moreThan(payed, bd0)){
 //                    BigDecimal rate = BigDecimalUtils.divide(payed, totalPayedMoney, true);
@@ -401,11 +417,11 @@ public class OrderImpl {
         if (m == null){
             return false;
         }
-        String bonusStatus = m.get(SQLParam.BONUS_STATUS);
+        String bonusStatus = m.getStr(SQLParam.BONUS_STATUS);
         if (!BonusStatus.CALULATED.equals(bonusStatus)){
             return false;
         }
-        BigDecimal bonusMoney = m.get(SQLParam.BONUS_MONEY);
+        BigDecimal bonusMoney = m.getBigDecimal(SQLParam.BONUS_MONEY);
         //应得奖金
 
         if (bonusMoney == null || BigDecimalUtils.equal(bonusMoney, BigDecimalUtils.zero())){
@@ -427,7 +443,7 @@ public class OrderImpl {
         }
         int status = 3;
         for (OrderModel m : ls){
-            String bonusStatus = m.get(SQLParam.BONUS_STATUS);
+            String bonusStatus = m.getStr(SQLParam.BONUS_STATUS);
             if (BonusStatus.BEEN_TO_USER.equals(bonusStatus)){
                 return bonusStatus;
             }

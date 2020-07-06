@@ -194,10 +194,14 @@ public class SchemeImpl {
 
         for (SchemeModel m : ls) {
             try {
-                int schemeId = m.get(SQLParam.ID);
-                BigDecimal selledM = m.get(SQLParam.SELLED_MONEY);
-                BigDecimal payedM = m.get(SQLParam.PAYED_MONEY);
-                Logs.sysErr("方案id：" + schemeId + "，方案名称：" + m.get(SQLParam.NAME));
+                Integer schemeId = m.getInt(SQLParam.ID);
+                if (schemeId == null){
+                    schemeId = -1;
+                }
+
+                BigDecimal selledM = m.getBigDecimal(SQLParam.SELLED_MONEY);
+                BigDecimal payedM = m.getBigDecimal(SQLParam.PAYED_MONEY);
+                Logs.sysErr("方案id：" + schemeId + "，方案名称：" + m.getStr(SQLParam.NAME));
                 Logs.sysErr("方案表里已售卖的金额：" + selledM.toString() + "\t已支付的金额：" + payedM.toString());
                 List<OrderModel> pays = OrderModel.queryBySchemeId(schemeId);
                 if (pays != null && pays.size() > 0) {
@@ -240,7 +244,7 @@ public class SchemeImpl {
         if (m == null){
             return false;
         }
-        String status = m.get(SQLParam.STATUS);
+        String status = m.getStr(SQLParam.STATUS);
 
         return !SQLParam.STATUS_ENABLE.equals(status);
     }
@@ -254,7 +258,7 @@ public class SchemeImpl {
         if (m == null){
             return false;
         }
-        String outOfTime = m.get(SQLParam.OUT_OF_TIME);
+        String outOfTime = m.getStr(SQLParam.OUT_OF_TIME);
 
         long oft = TimeUtils.strToMil(outOfTime, null, System.currentTimeMillis());
         return oft < System.currentTimeMillis();

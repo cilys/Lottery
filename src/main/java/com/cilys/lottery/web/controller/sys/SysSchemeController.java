@@ -215,7 +215,7 @@ public class SysSchemeController extends SchemeController {
             return;
         }
 
-        BigDecimal canUseBonus = sm.get(SQLParam.CAN_USE_BONUS);
+        BigDecimal canUseBonus = sm.getBigDecimal(SQLParam.CAN_USE_BONUS);
         if (canUseBonus == null
                 || BigDecimalUtils.noMoreThan(canUseBonus, BigDecimalUtils.zero())) {
 
