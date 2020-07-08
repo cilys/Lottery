@@ -14,7 +14,6 @@ import com.jfinal.aop.Before;
 @Before({SysUserInterceptor.class})
 public class SysUserMoneyFlowController extends UserMoneyFlowController {
 
-
     /**
      * 分配奖金给中奖用户
      */

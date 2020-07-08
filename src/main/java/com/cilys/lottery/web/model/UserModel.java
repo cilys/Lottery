@@ -9,6 +9,7 @@ import com.jfinal.plugin.activerecord.Db;
 import com.jfinal.plugin.activerecord.Model;
 import com.jfinal.plugin.activerecord.Page;
 
+import java.math.BigDecimal;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -116,8 +117,8 @@ public class UserModel extends BaseModel<UserModel> {
         }
     }
 
-    public static Page<UserModel> getUsersByStatus(String status, int pageNumber,
-                                                   int pageSize, String coumln, String desc, boolean encoder){
+    public static Page<UserModel> getUsersByStatus(String status, int pageNumber, int pageSize, String coumln,
+                                                   String desc, boolean encoder, String realName){
         if (pageSize < 1){
             pageSize = 10;
         }
@@ -134,11 +135,25 @@ public class UserModel extends BaseModel<UserModel> {
 
         Page<UserModel> result = null;
 
+        String likeSql = "";
+        if (!StrUtils.isEmpty(realName)){
+            likeSql = " " + SQLParam.REAL_NAME + " like '%" + realName + "%' ";
+        }
+
         if (SQLParam.STATUS_ENABLE.equals(status) || SQLParam.STATUS_DISABLE.equals(status)){
-            String sql = StrUtils.join(" from ", SQLParam.T_USER," where ", SQLParam.STATUS, " = '", status, "' order by ", coumln, " ", desc);
+            if (!StrUtils.isEmpty(likeSql)){
+                likeSql = likeSql + " and ";
+            }
+            String sql = StrUtils.join(" from ", SQLParam.T_USER," where ", likeSql,
+                    SQLParam.STATUS, " = '", status, "' order by ", coumln, " ", desc);
             result = dao.paginate(pageNumber, pageSize, "select * ", sql);
         }else {
-            result = dao.paginate(pageNumber, pageSize, "select * ", " from " + SQLParam.T_USER + " order by " + coumln + " " + desc);
+            if (!StrUtils.isEmpty(likeSql)){
+                likeSql = " where " + likeSql;
+            }
+
+            result = dao.paginate(pageNumber, pageSize, "select * ",
+                    " from " + SQLParam.T_USER + likeSql + " order by " + coumln + " " + desc);
         }
         if (result != null){
             if (result.getList() != null && result.getList().size() > 0){
@@ -154,6 +169,13 @@ public class UserModel extends BaseModel<UserModel> {
             }
         }
         return result;
+    }
+
+    public static boolean updateColdMoney(UserModel m) throws Exception{
+        if (m == null){
+            return false;
+        }
+        return m.update();
     }
 
     public static boolean delByUserId(String userId){

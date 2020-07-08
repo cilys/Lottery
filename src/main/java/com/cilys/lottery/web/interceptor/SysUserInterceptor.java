@@ -13,16 +13,17 @@ public class SysUserInterceptor extends BaseInterceptor {
     public void intercept(Invocation inv) {
         String userId = getUserId(inv);
 
-//        if (RootUserIdUtils.isRootUser(userId)) {
-//            inv.invoke();
-//        } else {
-//            renderJson(inv, Param.C_RIGHT_LOW, createTokenByOs(inv), null);
-//        }
-        String sys = getParam(inv, "sys");
-        if ("sys".equalsIgnoreCase(sys)){
+        if (RootUserIdUtils.isRootUser(userId)) {
             inv.invoke();
-        }else {
+        } else {
             renderJson(inv, Param.C_RIGHT_LOW, createTokenByOs(inv), null);
         }
+//        String sys = getParam(inv, "sys");
+//        if ("sys".equalsIgnoreCase(sys)){
+//            inv.invoke();
+//        }else {
+//            renderJson(inv, Param.C_RIGHT_LOW, createTokenByOs(inv), null);
+//        }
+        inv.invoke();
     }
 }

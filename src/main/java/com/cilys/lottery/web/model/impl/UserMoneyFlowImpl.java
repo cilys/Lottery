@@ -28,8 +28,28 @@ public class UserMoneyFlowImpl {
      * @return
      * @throws Exception
      */
-    public static boolean addToMoneyFlow(String userId, Integer SchemeId, Integer orderId, BigDecimal money,
-                          String sourceUserId, String payType) throws Exception {
+    public static boolean addToMoneyFlow(String userId, Integer SchemeId, Integer orderId,
+                                         BigDecimal money,
+                                         String sourceUserId, String payType) throws Exception {
+        return addToMoneyFlow(userId, SchemeId, orderId, null,
+                money, sourceUserId, payType);
+    }
+
+    /**
+     * 资金流水入库
+     * @param userId    用户id
+     * @param SchemeId  方案id
+     * @param orderId   订单id
+     * @param applyCashId   申请提现id
+     * @param money         金额
+     * @param sourceUserId
+     * @param payType
+     * @return
+     * @throws Exception
+     */
+    public static boolean addToMoneyFlow(String userId, Integer SchemeId, Integer orderId,
+                                         Integer applyCashId, BigDecimal money,
+                                         String sourceUserId, String payType) throws Exception {
         if (StrUtils.isEmpty(userId)) {
             return false;
         }
@@ -43,7 +63,8 @@ public class UserMoneyFlowImpl {
             return false;
         }
         ScheduUtils.putTask(TaskBean.syncUserMoneyFlowToUser());
-        return UserMoneyFlowModel.insert(userId, SchemeId, orderId, money, sourceUserId, payType);
+        return UserMoneyFlowModel.insert(userId, SchemeId, orderId, applyCashId,
+                money, sourceUserId, payType);
     }
 
     /**
@@ -93,6 +114,8 @@ public class UserMoneyFlowImpl {
         param.append(PayType.PAY_SYSTEM_UPDATE_USER_LEFT_MONEY);  //系统更新用户的余额
         param.append(", ");
         param.append(PayType.PAY_SYSTEM_BONUS);  //系统下发奖金
+        param.append(", ");
+        param.append(PayType.PAY_APPLY_CASH_SUCCESS);  //提现成功
         param.append(")");
         param.append(" ");
         param.append("order by ");
@@ -120,12 +143,14 @@ public class UserMoneyFlowImpl {
                 && !PayType.PAY_SYSTEM_BACK.equals(payType)
                 && !PayType.PAY_SYSTEM_RECHARGE.equals(payType)
                 && !PayType.PAY_SYSTEM_UPDATE_USER_LEFT_MONEY.equals(payType)
-                && !PayType.PAY_SYSTEM_BONUS.equals(payType)){
+                && !PayType.PAY_SYSTEM_BONUS.equals(payType)
+                && !PayType.PAY_APPLY_CASH_SUCCESS.equals(payType)){
             // 不是余额支付
             // 不是系统退款
             // 不是系统充值
             // 不是系统更新用户余额，
             // 系统下发奖金
+            // 提现成功
             // 无需更新用户余额，直接返回true
             return true;
         }
@@ -148,7 +173,16 @@ public class UserMoneyFlowImpl {
         //如果是系统更新用户余额，则直接把新的余额更新到表里
         if (PayType.PAY_SYSTEM_UPDATE_USER_LEFT_MONEY.equals(payType)){
             um.set(SQLParam.LEFT_MONEY, flowMoney);
-        }else {
+        } else if (PayType.PAY_APPLY_CASH_SUCCESS.equals(payType)){
+            //如果是提现，则从冻结余额里扣除
+            BigDecimal coldMoney = um.getBigDecimal(SQLParam.COLD_MONEY);
+            if (coldMoney == null){
+                coldMoney = BigDecimalUtils.zero();
+            }
+            BigDecimal newLeftMoney = BigDecimalUtils.add(coldMoney, flowMoney);
+            um.set(SQLParam.COLD_MONEY, newLeftMoney);
+            System.out.println("执行同步提现：coldMoney = " + coldMoney.toString() + "\tflowMoney = " + flowMoney);
+        } else {
             BigDecimal userMoney = um.getBigDecimal(SQLParam.LEFT_MONEY);
             if (userMoney == null){
                 userMoney = BigDecimalUtils.zero();

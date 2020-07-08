@@ -10,7 +10,7 @@ import java.util.concurrent.TimeUnit;
 public class TimerTask {
 
     public static void startTimer(boolean initSys){
-        TimerUtils.task(new TimerRunnable(initSys), 1, 60, TimeUnit.MINUTES);
+        TimerUtils.task(new TimerRunnable(initSys), 1, 10, TimeUnit.MINUTES);
         initSys = false;
     }
 }

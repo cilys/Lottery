@@ -16,8 +16,9 @@ import java.util.Map;
 public class UserMoneyFlowModel extends BaseModel<UserMoneyFlowModel> {
     private static UserMoneyFlowModel dao = new UserMoneyFlowModel();
 
-    public synchronized static boolean insert(String userId, Integer schemeId, Integer orderId, BigDecimal money,
-                                 String sourceUserId, String payType) throws Exception {
+    public synchronized static boolean insert(String userId, Integer schemeId, Integer orderId,
+                                              Integer applyCashId, BigDecimal money,
+                                              String sourceUserId, String payType) throws Exception {
         UserMoneyFlowModel m = new UserMoneyFlowModel();
         m.set(SQLParam.USER_ID, userId);
         if (schemeId != null){
@@ -25,6 +26,9 @@ public class UserMoneyFlowModel extends BaseModel<UserMoneyFlowModel> {
         }
         if (orderId != null){
             m.set(SQLParam.ORDER_ID, orderId);
+        }
+        if (applyCashId != null){
+            m.set(SQLParam.APPLY_CASH_ID, applyCashId);
         }
         m.set(SQLParam.MONEY, money);
         m.set(SQLParam.SOURCE_USER_ID, sourceUserId);

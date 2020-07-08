@@ -21,4 +21,9 @@ public interface TaskType {
 
     //同步方案表中的，已售金额、已付款金额
     String SYNC_SCHEME_SELLED_AND_PAYED_MONEY = "SYNC_SCHEME_SELLED_AND_PAYED_MONEY";
+
+    //申请提现成功
+    String APPLY_CASH_SUCCESS = "APPLY_CASH_SUCCESS";
+    //拒绝提现
+//    String APPLY_CASH_REFUSE = "APPLY_CASH_REFUSE";
 }

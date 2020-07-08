@@ -4,6 +4,7 @@ import com.cily.utils.base.log.Logs;
 import com.cilys.lottery.web.cache1.UserInfoCache;
 import com.cilys.lottery.web.conf.Param;
 import com.cilys.lottery.web.conf.SQLParam;
+import com.cilys.lottery.web.interceptor.LoginedInterceptor;
 import com.cilys.lottery.web.interceptor.UserIdInterceptor;
 import com.cilys.lottery.web.log.LogUtils;
 import com.cilys.lottery.web.model.UserModel;
@@ -13,6 +14,7 @@ import com.cilys.lottery.web.utils.ParamUtils;
 import com.cilys.lottery.web.utils.ResUtils;
 import com.cilys.lottery.web.model.utils.TokenUtils;
 import com.jfinal.aop.Before;
+import com.jfinal.aop.Clear;
 import com.jfinal.kit.HttpKit;
 
 import java.util.Map;
@@ -23,63 +25,6 @@ import java.util.Map;
 
 public class UserController extends BaseController {
 
-//    @Clear({LoginedInterceptor.class})
-//    @Before({UserNameInterceptor.class, PwdInterceptor.class})
-//    public void login(){
-//        String userName = getParam(SQLParam.USER_NAME);
-//        String pwd = getParam(SQLParam.PWD);
-//
-//        String deviceImei = getDeviceImei();
-//
-//        UserModel um = UserModel.getUserByUserName(userName);
-//        if (um == null){
-//            renderJson(ResUtils.res(Param.C_USER_NOT_EXIST, null, null));
-//            return;
-//        }
-//        if (pwd.equals(um.get(SQLParam.PWD))){
-//            um.remove(SQLParam.PWD);
-//
-//            if (Param.REQUEST_SOURCE_WEB.equals(getHeader(Param.OS_TYPE))) {
-////                if (RootUserIdUtils.isRootUser(um.get(SQLParam.USER_ID))) {
-//                    String token = TokenUtils.createToken(um.getStr(SQLParam.USER_ID), deviceImei, null);
-//                    renderJson(ResUtils.success(token, um));
-//                    return;
-////                }else {
-////                    renderJsonFailed(Param.C_RIGHT_LOW, null);
-////                }
-//            }else {
-//                String token = TokenUtils.createToken(um.getStr(SQLParam.USER_ID), deviceImei, null);
-//                renderJson(ResUtils.success(token, um));
-//            }
-//            return;
-//        }else {
-//            renderJson(ResUtils.res(Param.C_USER_OR_PWD_ERROR, null, null));
-//            return;
-//        }
-//    }
-//
-//    @Clear({LoginedInterceptor.class})
-//    @Before({UserNameInterceptor.class, PwdInterceptor.class,
-//            PhoneInterceptor.class})
-//    public void regist(){
-//        UserInfoCache.clearUserCache();
-//
-//        UserUtils.regist(this, null, null);
-//    }
-//
-//    @Before({UserIdInterceptor.class, PwdInterceptor.class,
-//            PhoneInterceptor.class})
-//    public void updateUserInfo(){
-//        UserUtils.updateUserInfo(this, null, getUserId(), null);
-//    }
-//
-//    @Before({SearchInterceptor.class})
-//    public void search(){
-//        String searchText = getParam(Param.SEARCH_TEXT);
-//        renderJsonSuccess(UserModel.searchUser(getParaToInt(Param.PAGE_NUMBER, 1),
-//                getParaToInt(Param.PAGE_SIZE, 10), searchText, !"1".equals(getHeader("osType"))));
-//    }
-//
     @Before({UserIdInterceptor.class})
     public void userInfo(){
         String userId = getParam(SQLParam.USER_ID);
@@ -124,17 +69,8 @@ public class UserController extends BaseController {
 //            renderJsonFailed(Param.C_PWD_CHANGE_FAILED, null);
 //        }
 //    }
-//
-//    public void searchUsers(){
-//        String userIds = getParam("userIds");
-//        if (StrUtils.isEmpty(userIds)){
-//            renderJsonFailed(Param.C_USER_ID_NULL, null);
-//            return;
-//        }
-//        List<String> us = JSON.parseArray(userIds, String.class);
-//        renderJsonSuccess(UserModel.searchUsers(us));
-//    }
 
+    @Clear({LoginedInterceptor.class})
     public void login(){
         String userName = getParam(SQLParam.USER_NAME);
         String pwd = getParam(SQLParam.PWD);
@@ -182,6 +118,7 @@ public class UserController extends BaseController {
         return false;
     }
 
+    @Clear({LoginedInterceptor.class})
     public void regist(){
         try {
             String str = HttpKit.readData(getRequest());

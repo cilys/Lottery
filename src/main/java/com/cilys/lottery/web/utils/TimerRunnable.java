@@ -34,12 +34,12 @@ public class TimerRunnable implements Runnable {
             //同步方案的已购买的金额、已支付的金额
             ScheduUtils.putTask(TaskType.SYNC_SCHEME_SELLED_AND_PAYED_MONEY);
 
-            //资金流水同步到账户里
-            ScheduUtils.putTask(TaskType.SYNC_TOTAL_USER_MONEY_FLOW_TO_USER);
-
             //清除日志
             ScheduUtils.putTask(TaskType.CLEAR_PUT_OF_TIME_LOG);
 
         }
+
+        //资金流水同步到账户里
+        ScheduUtils.putTask(TaskType.SYNC_TOTAL_USER_MONEY_FLOW_TO_USER);
     }
 }

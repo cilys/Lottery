@@ -1,0 +1,35 @@
+<component name="ArtifactManager">
+  <artifact type="exploded-war" name="Gradle : com.cilys : Lottery-1.0.0.war (exploded)">
+    <output-path>$PROJECT_DIR$/build/libs/exploded/Lottery-1.0.0.war</output-path>
+    <properties id="gradle-properties">
+      <options external-project-path="$PROJECT_DIR$">
+        <manifest>TWFuaWZlc3QtVmVyc2lvbjogMS4wDQoNCg==</manifest>
+      </options>
+    </properties>
+    <root id="root">
+      <element id="directory" name="META-INF">
+        <element id="file-copy" path="$PROJECT_DIR$/build/libs/exploded/Lottery-1.0.0.war/META-INF/MANIFEST.MF" />
+      </element>
+      <element id="javaee-facet-resources" facet="Lottery_main/web/Web Gradle : Lottery-1.0.0.war" />
+      <element id="directory" name="WEB-INF">
+        <element id="directory" name="classes">
+          <element id="module-output" name="Lottery_main" />
+          <element id="dir-copy" path="$PROJECT_DIR$/build/resources/main" />
+        </element>
+        <element id="directory" name="lib">
+          <element id="file-copy" path="$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.jfinal/jfinal/3.3/55ddd3e5223d9e8208d98071b16a56f7573a84bd/jfinal-3.3.jar" />
+          <element id="file-copy" path="$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.alibaba/fastjson/1.2.44/1dbb13ed90bab048d51559dbb17374d1bbf096fc/fastjson-1.2.44.jar" />
+          <element id="file-copy" path="$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.mchange/c3p0/0.9.5.1/69b2af361fb6a0feb65ccc20c29d949566f0a3ba/c3p0-0.9.5.1.jar" />
+          <element id="file-copy" path="$USER_HOME$/.gradle/caches/modules-2/files-2.1/mysql/mysql-connector-java/5.1.44/61b6b998192c85bb581c6be90e03dcd4b9079db4/mysql-connector-java-5.1.44.jar" />
+          <element id="file-copy" path="$USER_HOME$/.gradle/caches/modules-2/files-2.1/javax.servlet/javax.servlet-api/4.0.0/60200affc2fe0165136ed3690faf00b66aed581a/javax.servlet-api-4.0.0.jar" />
+          <element id="file-copy" path="$USER_HOME$/.gradle/caches/modules-2/files-2.1/commons-fileupload/commons-fileupload/1.3.2/5d7491ed6ebd02b6a8d2305f8e6b7fe5dbd95f72/commons-fileupload-1.3.2.jar" />
+          <element id="file-copy" path="$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.github.cilys/utils-base/1.1.0/1985e89065e7c1dc4b644f0e5c755c047fecc4/utils-base-1.1.0.jar" />
+          <element id="file-copy" path="$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.apache.tomcat/tomcat-websocket-api/9.0.30/2c5367ebef61f2f515a7eacd749338d6fd0ef417/tomcat-websocket-api-9.0.30.jar" />
+          <element id="file-copy" path="$USER_HOME$/.gradle/caches/modules-2/files-2.1/cglib/cglib-nodep/3.2.5/d7a6a551766f1916a940c7fe2a16fd6473d72684/cglib-nodep-3.2.5.jar" />
+          <element id="file-copy" path="$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.mchange/mchange-commons-java/0.2.10/1f1f90ddc403e60e0089756f04119948f6a49a04/mchange-commons-java-0.2.10.jar" />
+          <element id="file-copy" path="$USER_HOME$/.gradle/caches/modules-2/files-2.1/commons-io/commons-io/2.2/83b5b8a7ba1c08f9e8c8ff2373724e33d3c1e22a/commons-io-2.2.jar" />
+        </element>
+      </element>
+    </root>
+  </artifact>
+</component>

@@ -8,6 +8,7 @@ import com.cilys.lottery.web.cache1.SchemeInfoCache;
 import com.cilys.lottery.web.conf.Param;
 import com.cilys.lottery.web.conf.SQLParam;
 import com.cilys.lottery.web.controller.SchemeController;
+import com.cilys.lottery.web.interceptor.SysUserInterceptor;
 import com.cilys.lottery.web.log.LogUtils;
 import com.cilys.lottery.web.model.SchemeModel;
 import com.cilys.lottery.web.model.impl.OrderImpl;
@@ -15,6 +16,7 @@ import com.cilys.lottery.web.model.impl.SchemeImpl;
 import com.cilys.lottery.web.model.utils.UserUtils;
 import com.cilys.lottery.web.utils.BigDecimalUtils;
 import com.cilys.lottery.web.utils.ParamUtils;
+import com.jfinal.aop.Before;
 import com.jfinal.kit.HttpKit;
 
 import java.math.BigDecimal;
@@ -24,6 +26,7 @@ import java.util.logging.Logger;
 /**
  * Created by admin on 2020/6/16.
  */
+@Before({SysUserInterceptor.class})
 public class SysSchemeController extends SchemeController {
 
     public void add(){

@@ -24,6 +24,9 @@ public class LogInterceptor extends BaseInterceptor {
         }
 
         String actionUrl = inv.getActionKey();
+
+        System.err.println("请求路径：" + actionUrl);
+
         if (StrUtils.isEmpty(actionUrl) || actionUrl.equals("/")){
 
         }else {

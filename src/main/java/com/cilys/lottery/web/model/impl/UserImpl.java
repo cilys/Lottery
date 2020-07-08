@@ -138,12 +138,141 @@ public class UserImpl {
         return UserModel.getUserByUserName(userName);
     }
 
+    /**
+     * 申请提现后，需冻结资金
+     * @param userId    申请者
+     * @param money     申请提现的资金
+     * @return
+     */
+    public static String applyCash(String userId, String money) throws Exception{
+        if (StrUtils.isEmpty(userId)){
+            return Param.C_USER_ID_NULL;
+        }
+        if (StrUtils.isEmpty(money)){
+            return Param.C_MONEY_NULL;
+        }
+        BigDecimal applyMoney = BigDecimalUtils.toBigDecimal(money);
+        if (applyMoney == null){
+            return Param.C_MONEY_ILLAGE;
+        }
+        if (BigDecimalUtils.noMoreThan(applyMoney, BigDecimalUtils.zero())){
+            return Param.C_MONEY_ILLAGE;
+        }
 
+        UserModel um = UserModel.getUserByUserId(userId);
+        if (um == null){
+            return Param.C_USER_NOT_EXIST;
+        }
+        BigDecimal leftMoney = um.getBigDecimal(SQLParam.LEFT_MONEY);
+        if (leftMoney == null){
+            leftMoney = BigDecimalUtils.zero();
+        }
+        if (BigDecimalUtils.noMoreThan(leftMoney, applyMoney)){
+            return Param.C_USER_LEFT_MONEY_NOT_ENTHOH;
+        }
 
+        BigDecimal newLeftMoney = BigDecimalUtils.subtract(leftMoney, applyMoney);
 
+        BigDecimal oldColdMoney = um.getBigDecimal(SQLParam.COLD_MONEY);
+        if (oldColdMoney == null){
+            oldColdMoney = BigDecimalUtils.zero();
+        }
+        BigDecimal newColdMoney = BigDecimalUtils.add(oldColdMoney, applyMoney);
 
+        um.set(SQLParam.LEFT_MONEY, newLeftMoney);
+        um.set(SQLParam.COLD_MONEY, newColdMoney);
 
+        if (UserModel.updateColdMoney(um)){
+            return Param.C_SUCCESS;
+        }else {
+            return Param.C_UPDATE_FAILED;
+        }
+    }
 
+    /**
+     * 提现成功
+     * @param userId        申请者
+     * @param applyMoney    申请的提现金额
+     * @return
+     */
+    public static String applySuccess(String userId, BigDecimal applyMoney) throws Exception{
+        if (StrUtils.isEmpty(userId)){
+            return Param.C_USER_ID_NULL;
+        }
+
+        if (applyMoney == null || BigDecimalUtils.noMoreThan(applyMoney, BigDecimalUtils.zero())){
+            return Param.C_MONEY_ILLAGE;
+        }
+
+        UserModel um = UserModel.getUserByUserId(userId);
+        if (um == null){
+            return Param.C_USER_NOT_EXIST;
+        }
+
+        BigDecimal coldMoney = um.getBigDecimal(SQLParam.LEFT_MONEY);
+        if (coldMoney == null){
+            coldMoney = BigDecimalUtils.zero();
+        }
+        if (BigDecimalUtils.lessThan(coldMoney, applyMoney)){
+            return Param.C_COLE_MONEY_NOT_ENTHOH;
+        }
+        BigDecimal newColdMoney = BigDecimalUtils.subtract(coldMoney, applyMoney);
+        um.set(SQLParam.COLD_MONEY, applyMoney);
+
+        if (UserModel.updateColdMoney(um)){
+            return Param.C_SUCCESS;
+        }else {
+            return Param.C_UPDATE_FAILED;
+        }
+    }
+
+    /**
+     * 提现被拒绝
+     * @param userId
+     * @param applyMoney
+     * @return
+     */
+    public static String applyRefuse(String userId, BigDecimal applyMoney) throws Exception{
+        if (StrUtils.isEmpty(userId)){
+            return Param.C_USER_ID_NULL;
+        }
+
+        if (applyMoney == null || BigDecimalUtils.noMoreThan(applyMoney, BigDecimalUtils.zero())){
+            return Param.C_MONEY_ILLAGE;
+        }
+
+        UserModel um = UserModel.getUserByUserId(userId);
+        if (um == null){
+            return Param.C_USER_NOT_EXIST;
+        }
+        BigDecimal leftMoney = um.getBigDecimal(SQLParam.LEFT_MONEY);
+        if (leftMoney == null){
+            leftMoney = BigDecimalUtils.zero();
+        }
+        if (BigDecimalUtils.noMoreThan(leftMoney, applyMoney)){
+            return Param.C_USER_LEFT_MONEY_NOT_ENTHOH;
+        }
+
+        BigDecimal newLeftMoney = BigDecimalUtils.add(leftMoney, applyMoney);
+
+        um.set(SQLParam.LEFT_MONEY, newLeftMoney);
+
+        BigDecimal oldColdMoney = um.getBigDecimal(SQLParam.COLD_MONEY);
+        if (oldColdMoney == null){
+            oldColdMoney = BigDecimalUtils.zero();
+        }
+        if (BigDecimalUtils.lessThan(oldColdMoney, applyMoney)){
+            return Param.C_COLE_MONEY_NOT_ENTHOH;
+        }
+        BigDecimal newColodMoney = BigDecimalUtils.subtract(oldColdMoney, applyMoney);
+        um.set(SQLParam.COLD_MONEY, newColodMoney);
+
+        if (UserModel.updateColdMoney(um)){
+            return Param.C_SUCCESS;
+        }else {
+            return Param.C_UPDATE_FAILED;
+        }
+    }
 
 
 

@@ -35,6 +35,7 @@ public class Param {
 
     public final static String C_USER_DEL_FAILED = "1021";
     public final static String C_USER_LEFT_MONEY_NOT_ENTHOH = "5022";
+    public final static String C_COLE_MONEY_NOT_ENTHOH = "5023";
 
     public final static String C_PWD_NULL = "1031";
     public final static String C_PWD_ILLAGLE = "1032";
@@ -62,8 +63,8 @@ public class Param {
     public final static String C_USER_INFO_UPDATE_FAILURE = "1121";
     public final static String C_USER_INFO_NO_UPDATE = "1122";
 
-    public final static String C_ADD_MONEY_NULL = "1131";
-    public final static String C_ADD_MONEY_ILLAGE = "1132";
+    public final static String C_MONEY_NULL = "1131";
+    public final static String C_MONEY_ILLAGE = "1132";
 
 
     public final static String C_PARAM_ERROR = "2111";
@@ -106,7 +107,11 @@ public class Param {
 
     public final static String C_NONE_OF_CAN_USE_BONUS = "5071";
 
+    public final static String C_CASH_NOT_EXIST = "5101";
 
+    public final static String C_OPERATOR_NULL = "5102";
+
+    public final static String C_APPLY_STATUS_FOR_UPDATE_ERROR = "5201";
 
 
 
@@ -163,13 +168,13 @@ public class Param {
         failureInfo.put(C_NORMAL_CAN_NOT_BUY_FOR_OTHER, "普通用户暂不支持代购");
         failureInfo.put(C_BUY_MONEY_ZERO, "购买份额为0，请重新购买");
         failureInfo.put(C_BUY_MONEY_ILLAGE, "购买份额不合法，请重新购买");
-        failureInfo.put(C_USER_LEFT_MONEY_NOT_ENTHOH, "账号余额不足");
+        failureInfo.put(C_USER_LEFT_MONEY_NOT_ENTHOH, "余额不足");
         failureInfo.put(C_BUY_FAILED, "购买失败，请稍后重试..");
         failureInfo.put(C_SCHEME_DISABLE, "该方案已停售");
         failureInfo.put(C_SCHEME_OUT_OF_TIME, "该方案已超过截止时间");
         failureInfo.put(C_SCHEME_LEFT_MONEY_NOT_EOUTH, "该方案剩余份额不足");
-        failureInfo.put(C_ADD_MONEY_NULL, "充值金额为空");
-        failureInfo.put(C_ADD_MONEY_ILLAGE, "充值金额非法");
+        failureInfo.put(C_MONEY_NULL, "金额为空");
+        failureInfo.put(C_MONEY_ILLAGE, "金额非法");
         failureInfo.put(C_SCHEME_HAS_SELLED, "该方案已经被售卖给客户，不可继续操作");
         failureInfo.put(C_SCHEME_ID_NULL, "方案id为空");
         failureInfo.put(C_NONE_FOR_UPDATE, "没有数据需要更新");
@@ -180,11 +185,10 @@ public class Param {
         failureInfo.put(C_ORDER_ADD_FAILED, "购买失败，请稍后重试..");
         failureInfo.put(C_NONE_OF_CAN_USE_BONUS, "该方案未分配奖金或可用奖金余额不足");
         failureInfo.put(C_USER_DISABLE, "该用户未生效，请联系店主审核");
-//        failureInfo.put(, );
-//        failureInfo.put(, );
-//        failureInfo.put(, );
-//        failureInfo.put(, );
-//        failureInfo.put(, );
+        failureInfo.put(C_CASH_NOT_EXIST, "申请不存在");
+        failureInfo.put(C_OPERATOR_NULL, "操作者为空");
+        failureInfo.put(C_APPLY_STATUS_FOR_UPDATE_ERROR, "修改的状态错误");
+        failureInfo.put(C_COLE_MONEY_NOT_ENTHOH, "冻结资金不足提现");
 //        failureInfo.put(, );
 //        failureInfo.put(, );
 //        failureInfo.put(, );

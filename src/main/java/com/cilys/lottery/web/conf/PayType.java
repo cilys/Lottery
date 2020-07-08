@@ -15,4 +15,7 @@ public interface PayType {
     String PAY_SYSTEM_UPDATE_USER_LEFT_MONEY = "8";     //系统更新用户的余额
 
     String PAY_SYSTEM_BONUS = "9";      //系统下发奖金
+
+    String PAY_APPLY_CASH_SUCCESS = "10";   //申请提现成功
+    String PAY_APPLY_CASH_REFUSE = "11";   //拒绝提现
 }

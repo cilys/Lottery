@@ -25,8 +25,8 @@ public class AssignNameThreadFactory extends BaseThreadFactory {
 
     public Thread newThread(Runnable r) {
         Thread t;
-        System.out.println("---" + (r instanceof AssignThreadNameRunnable));
-        System.out.println("---" + r.getClass().getSimpleName());
+//        System.out.println("---" + (r instanceof AssignThreadNameRunnable));
+//        System.out.println("---" + r.getClass().getSimpleName());
         if (r != null && r instanceof AssignThreadNameRunnable){
             String threadName = ((AssignThreadNameRunnable) r).getThreadName();
 

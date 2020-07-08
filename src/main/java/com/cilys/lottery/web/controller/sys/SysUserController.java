@@ -24,10 +24,9 @@ import java.util.Map;
 /**
  * Created by admin on 2018/2/5.
  */
-//@Before({SysUserInterceptor.class})
+@Before({SysUserInterceptor.class})
 public class SysUserController extends BaseController {
 
-    @Before({OptionMethodInterceptor.class})
     public void addUser(){
         try {
             String str = HttpKit.readData(getRequest());
@@ -51,7 +50,6 @@ public class SysUserController extends BaseController {
         renderJson(UserImpl.updateUserStatus(getParam(SQLParam.USER_ID), getParam(SQLParam.STATUS)), null);
     }
 
-    @Before({OptionMethodInterceptor.class})
     public void updateUserInfo(){
 //        UserUtils.updateUserInfoByJsonData(this, getUserId());
         try {
@@ -74,9 +72,13 @@ public class SysUserController extends BaseController {
 
     public void getUsers(){
         String osType = getHeader("osType");
+        String realName = getParam(SQLParam.REAL_NAME, null);
+        if (realName != null){
+            realName = realName.trim();
+        }
 
         renderJsonSuccess(UserModel.getUsersByStatus(getParam(SQLParam.STATUS),
-                getPageNumber(), getPageSize(), null, "asc", !"1".equals(osType)));
+                getPageNumber(), getPageSize(), null, "asc", !"1".equals(osType), realName));
     }
 
     public void getUserCount(){
@@ -108,13 +110,13 @@ public class SysUserController extends BaseController {
         //修改用户的账户余额
         String lm = getParam(SQLParam.LEFT_MONEY);
         if (StrUtils.isEmpty(lm)) {
-            renderJsonFailed(Param.C_ADD_MONEY_NULL, null);
+            renderJsonFailed(Param.C_MONEY_NULL, null);
             return;
         }
 
         BigDecimal addMoney = BigDecimalUtils.toBigDecimal(lm);
         if (addMoney == null){
-            renderJsonFailed(Param.C_ADD_MONEY_ILLAGE, null);
+            renderJsonFailed(Param.C_MONEY_ILLAGE, null);
             return;
         }
 

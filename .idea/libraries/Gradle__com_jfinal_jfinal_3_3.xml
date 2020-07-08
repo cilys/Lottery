@@ -1,0 +1,11 @@
+<component name="libraryTable">
+  <library name="Gradle: com.jfinal:jfinal:3.3">
+    <CLASSES>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.jfinal/jfinal/3.3/55ddd3e5223d9e8208d98071b16a56f7573a84bd/jfinal-3.3.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.jfinal/jfinal/3.3/5f722fc36b9c2f6e031208411b718814db243a86/jfinal-3.3-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>

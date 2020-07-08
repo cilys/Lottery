@@ -17,7 +17,7 @@ public class LogRunnable extends AssignThreadNameRunnable {
 
     @Override
     public void run() {
-        LogUtils.info("LogRunnable执行线程名称：" + Thread.currentThread().getName());
+//        LogUtils.info("LogRunnable执行线程名称：" + Thread.currentThread().getName());
         LogImpl.insert(logModel);
     }
 }

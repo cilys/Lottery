@@ -225,7 +225,7 @@ public class OrderImpl {
                 }
             }else {
                 //检查系统是否开通管理员代购开关
-                boolean adminCanBuyOther = PropKit.getBoolean("adminCanBuyOther", false);
+                boolean adminCanBuyOther = PropKit.getBoolean("adminCanBuyOther", true);
                 if (!adminCanBuyOther){
                     return Param.C_ADMIN_CAN_NOT_BUY_FOR_OTHER;
                 }

@@ -2,10 +2,12 @@ package com.cilys.lottery.web;
 
 import com.cilys.lottery.web.conf.SQLParam;
 import com.cilys.lottery.web.controller.*;
+import com.cilys.lottery.web.controller.sys.SysCashController;
 import com.cilys.lottery.web.controller.sys.SysSchemeController;
 import com.cilys.lottery.web.controller.sys.SysUserController;
 import com.cilys.lottery.web.controller.sys.SysUserMoneyFlowController;
 import com.cilys.lottery.web.interceptor.LogInterceptor;
+import com.cilys.lottery.web.interceptor.LoginedInterceptor;
 import com.cilys.lottery.web.interceptor.OptionMethodInterceptor;
 import com.cilys.lottery.web.model.*;
 import com.cilys.lottery.web.utils.TimerTask;
@@ -34,6 +36,8 @@ public class Conf extends JFinalConfig {
         me.add("order", OrderController.class);
         me.add("userMoneyFlow", UserMoneyFlowController.class);
         me.add("sys/userMoneyFlow", SysUserMoneyFlowController.class);
+        me.add("sys/cash", SysCashController.class);
+        me.add("cash", SysCashController.class);
     }
 
     @Override
@@ -57,13 +61,14 @@ public class Conf extends JFinalConfig {
         arp.addMapping(SQLParam.T_ORDER, OrderModel.class);
         arp.addMapping(SQLParam.T_USER_MONEY_FLOW, UserMoneyFlowModel.class);
         arp.addMapping(SQLParam.T_LOG, LogModel.class);
-//        arp.addMapping("t_car_task", CarTaskModel.class);
+        arp.addMapping(SQLParam.T_CASH, CashModel.class);
     }
 
     @Override
     public void configInterceptor(Interceptors me) {
         me.add(new LogInterceptor());
         me.add(new OptionMethodInterceptor());
+        me.add(new LoginedInterceptor());
     }
 
     @Override
@@ -74,8 +79,6 @@ public class Conf extends JFinalConfig {
     @Override
     public void afterJFinalStart() {
         super.afterJFinalStart();
-
-//        InitStationLine.initStation();
 
         TimerTask.startTimer(true);
     }

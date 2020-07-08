@@ -23,6 +23,7 @@ public interface SQLParam {
     String TOKEN = "token";
     String UPDATE_TIME = "updateTime";
     String LEFT_MONEY = "leftMoney";    //余额
+    String COLD_MONEY = "coldMoney";    //冻结资金
 
 
     String STATUS_ENABLE = "0";
@@ -63,6 +64,7 @@ public interface SQLParam {
     String ORDER_ID = "orderId";
     String SOURCE_USER_ID = "sourceUserId";
     String IS_ADD_TO_USER = "isAddToUser";
+    String APPLY_CASH_ID = "applyCashId";
 
     String T_LOG = "t_log";
     String OPERATION_TIME = "operationTime";
@@ -74,4 +76,10 @@ public interface SQLParam {
     String SORT = "sort";
     String AES = "aes";
     String DESC = "desc";
+
+    String T_CASH = "t_cash";
+    String MSG = "msg";
+    String APPLY_TIME = "applyTime";
+    String OPERATOR_RESULT = "operatorResult";
+    String OPERATOR_NAME = "operatorName";
 }
