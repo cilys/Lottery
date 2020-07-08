@@ -182,6 +182,9 @@ public class UserMoneyFlowImpl {
             BigDecimal newLeftMoney = BigDecimalUtils.add(coldMoney, flowMoney);
             um.set(SQLParam.COLD_MONEY, newLeftMoney);
             System.out.println("执行同步提现：coldMoney = " + coldMoney.toString() + "\tflowMoney = " + flowMoney);
+        } else if (PayType.PAY_APPLY_CASH.equals(payType)){
+            //新方式，提现申请，资金流水里增加了两条记录，一条是减少可用余额的记录，一条是增加冻结余额的记录
+
         } else {
             BigDecimal userMoney = um.getBigDecimal(SQLParam.LEFT_MONEY);
             if (userMoney == null){

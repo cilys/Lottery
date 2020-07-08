@@ -139,7 +139,7 @@ public class UserImpl {
     }
 
     /**
-     * 申请提现后，需冻结资金
+     * 申请提现后，需冻结资金。直接修改账户余额的方式
      * @param userId    申请者
      * @param money     申请提现的资金
      * @return
@@ -186,6 +186,49 @@ public class UserImpl {
             return Param.C_SUCCESS;
         }else {
             return Param.C_UPDATE_FAILED;
+        }
+    }
+
+    /**
+     * 申请提现后，需冻结资金。直接修改账户余额的方式
+     * @param userId    申请者
+     * @param money     申请提现的资金
+     * @return
+     */
+    public static String applyCash(Integer cashId, String userId, String money) throws Exception{
+        if (StrUtils.isEmpty(userId)){
+            return Param.C_USER_ID_NULL;
+        }
+        if (StrUtils.isEmpty(money)){
+            return Param.C_MONEY_NULL;
+        }
+        BigDecimal applyMoney = BigDecimalUtils.toBigDecimal(money);
+        if (applyMoney == null){
+            return Param.C_MONEY_ILLAGE;
+        }
+        if (BigDecimalUtils.noMoreThan(applyMoney, BigDecimalUtils.zero())){
+            return Param.C_MONEY_ILLAGE;
+        }
+
+        UserModel um = UserModel.getUserByUserId(userId);
+        if (um == null){
+            return Param.C_USER_NOT_EXIST;
+        }
+        BigDecimal leftMoney = um.getBigDecimal(SQLParam.LEFT_MONEY);
+        if (leftMoney == null){
+            leftMoney = BigDecimalUtils.zero();
+        }
+        if (BigDecimalUtils.noMoreThan(leftMoney, applyMoney)){
+            return Param.C_USER_LEFT_MONEY_NOT_ENTHOH;
+        }
+
+        //提现申请，流水表里增加一条减少可用余额的记录
+        boolean f = UserMoneyFlowImpl.addToMoneyFlow(userId, null, null, cashId,
+                applyMoney, SQLParam.SYSTEM, PayType.PAY_APPLY_CASH);
+        if (f){
+            return Param.C_SUCCESS;
+        }else {
+            return Param.C_INSERT_FAILED;
         }
     }
 
@@ -273,12 +316,5 @@ public class UserImpl {
             return Param.C_UPDATE_FAILED;
         }
     }
-
-
-
-
-
-
-
 
 }

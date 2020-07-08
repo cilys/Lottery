@@ -16,6 +16,15 @@ public interface PayType {
 
     String PAY_SYSTEM_BONUS = "9";      //系统下发奖金
 
+    @Deprecated
     String PAY_APPLY_CASH_SUCCESS = "10";   //申请提现成功
-    String PAY_APPLY_CASH_REFUSE = "11";   //拒绝提现
+    String PAY_APPLY_CASH_REFUSE = "11";
+
+    String PAY_APPLY_CASH_REDUCE_LEFT_MONEY = "12"; //申请提现，产生一条减少可用余额的交易记录
+    String PAY_APPLY_CASH_ADD_COLD_MONEY = "13";    //申请提现，并且产生一条增加冻结余额的交易记录
+
+    String PAY_APPLY_CASH_REFUSE_REDUCE_COLD_MONEY = "14";  //拒绝提现，产生一条减少冻结余额的交易记录
+    String PAY_APPLY_CASH_REFUSE_ADD_LEFT_MONEY = "15";     //拒绝提现，产生一条增加可用余额的交易记录
+    String PAY_APPLY_CASH_AGREE = "16";                     //同意提现，产生一条减少冻结余额的交易记录
+
 }

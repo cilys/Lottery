@@ -44,7 +44,9 @@ public class CashImpl {
 
         boolean inserResult = CashModel.insert(model);
         if (inserResult) {
-            String result = UserImpl.applyCash(userId, money);
+            Integer cashId = model.getInt(SQLParam.ID, null);
+//            String result = UserImpl.applyCash(userId, money);    //原来的实现方式，直接修改用户表里的可用余额和冻结余额
+            String result = UserImpl.applyCash(cashId, userId, money);  //新方式，通过资金流水表，实现资金同步
             return result;
         }else {
             return Param.C_INSERT_FAILED;
