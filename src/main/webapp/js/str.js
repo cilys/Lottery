@@ -1,5 +1,5 @@
 function strIsEmpty(str){
-	return (str == null || str == "" || str == undefined || str == "undefined" || str.length == 0 || str.indexOf("null") > -1);
+	return (str == null || str == "" || str == undefined || str == "undefined" || str.length == 0);
 }
 
 function strFomcat(str){

@@ -113,6 +113,9 @@ public class Param {
 
     public final static String C_APPLY_STATUS_FOR_UPDATE_ERROR = "5201";
 
+    public final static String C_BONUS_HAVE_BEEN_ENTER_USER = "5211";
+
+
 
 
 
@@ -189,7 +192,7 @@ public class Param {
         failureInfo.put(C_OPERATOR_NULL, "操作者为空");
         failureInfo.put(C_APPLY_STATUS_FOR_UPDATE_ERROR, "修改的状态错误");
         failureInfo.put(C_COLE_MONEY_NOT_ENTHOH, "冻结资金不足提现");
-//        failureInfo.put(, );
+        failureInfo.put(C_BONUS_HAVE_BEEN_ENTER_USER, "奖金已下发给用户");
 //        failureInfo.put(, );
 //        failureInfo.put(, );
 //        failureInfo.put(, );

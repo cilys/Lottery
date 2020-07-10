@@ -128,6 +128,8 @@ public class UserController extends BaseController {
             params.remove(SQLParam.STATUS);
             params.remove(SQLParam.LEFT_MONEY);
 
+            params.put(SQLParam.STATUS, SQLParam.STATUS_DISABLE);
+
             String result = UserImpl.addUser(params);
             if (Param.C_SUCCESS.equals(result)) {
                 UserInfoCache.clearUserCache();

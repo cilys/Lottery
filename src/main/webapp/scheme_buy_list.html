@@ -33,40 +33,39 @@
 		<div class="x-body">
 			<div class="layui-row">
 				<form class="layui-form layui-col-md12 x-so">
-					<div class="layui-form-item">
-						<div class="layui-inline">
-							<label for="input_total_money" class="layui-form-label">
-		                  		<span class="x-red"></span>支付状态：
-		              		</label>
-							<div class="layui-input-block">
-								<select id="select_pay_status" lay-filter="payStatus">
-									<option value="">全部</option>									
-									<option value="0">已支付</option>
-									<option value="1">待支付</option>
-									<option value="2">已退款</option>
-								</select>
-							</div>
+					<div class="layui-inline">
+						<label for="input_total_money" class="layui-form-label">
+	                  		<span class="x-red"></span>支付状态：
+	              		</label>
+						<div class="layui-input-block">
+							<select id="select_pay_status" lay-filter="payStatus">
+								<option value="">全部</option>									
+								<option value="0">已支付</option>
+								<option value="1">待支付</option>
+								<option value="2">已退款</option>
+							</select>
 						</div>
-							
-						<div class="layui-inline">
-							<label for="input_total_money" class="layui-form-label">
-		                  		<span class="x-red"></span>支付方式：
-		              		</label>
-							<div class="layui-input-block">
-								<select id="select_pay_type" lay-filter="payType">
-									<option value="">全部</option>									
-									<option value="1">余额支付</option>
-									<option value="2">微信支付</option>
-									<option value="3">支付宝支付</option>
-									<option value="4">银联支付</option>
-									<option value="5">现金支付</option>
-								</select>
-							</div>
+					</div>
+						
+					<div class="layui-inline">
+						<label for="input_total_money" class="layui-form-label">
+	                  		<span class="x-red"></span>支付方式：
+	              		</label>
+						<div class="layui-input-block">
+							<select id="select_pay_type" lay-filter="payType">
+								<option value="">全部</option>									
+								<option value="1">余额支付</option>
+								<option value="2">微信支付</option>
+								<option value="3">支付宝支付</option>
+								<option value="4">银联支付</option>
+								<option value="5">现金支付</option>
+							</select>
 						</div>
-						<div class="layui-inline">
-							<button id="btn_search" class="layui-btn" lay-submit lay-filter="search" type="submit">搜索</button>
-						</div>
-							
+					</div>
+					<div class="layui-inline">
+						<button id="btn_search" class="layui-btn" lay-submit lay-filter="search" type="submit">搜索</button>
+						<button id="btn_calculate" class="layui-btn layui-btn-normal" lay-submit lay-filter="calculate" type="submit">重新计算</button>
+						<button id="btn_enter_to_user" class="layui-btn layui-btn-normal" lay-submit lay-filter="enterToUser" type="submit">下发奖金</button>
 					</div>
 				</form>
 			</div>

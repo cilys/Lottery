@@ -68,40 +68,5 @@ public class OrderController extends BaseController {
                 payType, getPageNumber(), getPageSize()));
     }
 
-    /**
-     * 更新订单支付状态
-     */
-    public void updatePayStatus(){
-        final int id = getIntWithDefaultValue(SQLParam.ID);
 
-        final String newOrderStatus = getParam(SQLParam.ORDER_STATUS);
-
-        Db.tx(new IAtom() {
-            @Override
-            public boolean run() throws SQLException {
-                try{
-                    String result = OrderImpl.updatePayStatus(id, newOrderStatus);
-                    renderJson(result, null);
-                    return Param.C_SUCCESS.equals(result);
-                }catch (Exception e){
-                    renderJsonFailed(Param.C_SERVER_ERROR, null);
-                    Logs.printException(e);
-                    return false;
-                }
-            }
-        });
-    }
-
-    /**
-     * 计算奖金分配额度
-     */
-    public void calculateBonus(){
-        int schemeId = getInt(SQLParam.SCHEME_ID, -1);
-
-        if (OrderImpl.calculateBonus(schemeId)) {
-            renderJsonSuccess(null);
-        }else {
-            renderJsonFailed(Param.C_UPDATE_FAILED, null);
-        }
-    }
 }

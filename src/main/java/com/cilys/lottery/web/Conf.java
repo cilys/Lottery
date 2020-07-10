@@ -2,10 +2,7 @@ package com.cilys.lottery.web;
 
 import com.cilys.lottery.web.conf.SQLParam;
 import com.cilys.lottery.web.controller.*;
-import com.cilys.lottery.web.controller.sys.SysCashController;
-import com.cilys.lottery.web.controller.sys.SysSchemeController;
-import com.cilys.lottery.web.controller.sys.SysUserController;
-import com.cilys.lottery.web.controller.sys.SysUserMoneyFlowController;
+import com.cilys.lottery.web.controller.sys.*;
 import com.cilys.lottery.web.interceptor.LogInterceptor;
 import com.cilys.lottery.web.interceptor.LoginedInterceptor;
 import com.cilys.lottery.web.interceptor.OptionMethodInterceptor;
@@ -37,6 +34,7 @@ public class Conf extends JFinalConfig {
         me.add("userMoneyFlow", UserMoneyFlowController.class);
         me.add("sys/userMoneyFlow", SysUserMoneyFlowController.class);
         me.add("sys/cash", SysCashController.class);
+        me.add("sys/order", SysOrderController.class);
         me.add("cash", SysCashController.class);
     }
 

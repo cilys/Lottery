@@ -30,6 +30,14 @@ $(document).ready(function(){
 				
 				return false;
 			});
+			
+			form.on('submit(calculate)', function(data) {				
+				return false;
+			});
+			
+			form.on('submit(enterToUser)', function(data) {				
+				return false;
+			});
 		});
 	}
 	
@@ -63,8 +71,11 @@ $(document).ready(function(){
 				+		"<th>客户姓名</th>"
 				+		"<th>购买份额</th>"
 				+		"<th>支付方式</th>"
-				+		"<th>支付状态</th>"
-				+		"<th>操作者姓名</th>"
+				+		"<th>订单状态</th>"
+				+		"<th>操作者</th>"
+				+		"<th>投资比例</th>"
+				+		"<th>所得奖金</th>"
+				+		"<th>奖金状态</th>"
 				+		"<th>创建时间</th>"
 				+		"<th>操作</th>"
 				+	"</tr>"
@@ -82,15 +93,15 @@ $(document).ready(function(){
 				s += 	"<td>" + fomcatPayType(o.payType) + "</td>";
 				s += 	"<td>" + fomcatPayStatus(o.orderStatus) + "</td>"
 				s += 	"<td>" + strFomcat(o.operatorName) + "</td>"
+				s += 	"<td>" + fomcatRate(o.payedRate) + "</td>"
+				s += 	"<td>" + strFomcat(o.bonusMoney) + "</td>"
+				s += 	"<td>" + fomcatBonusStatus(o.bonusStatus) + "</td>"
 				s += "<td>" + o.createTime + "</td>";
 				
 				s +=	"<td>"
 						+	"<div class='layui-btn-group'>"
 						+		"<button class='layui-btn layui-btn-primary layui-btn-sm' id='btn_edit' data-id='" + o.id + "'>"
 						+			"<i class='layui-icon'>" + fomcatPayStatusIcon(o.orderStatus) + "</i>"
-						+		"</button>"
-						+		"<button class='layui-btn layui-btn-primary layui-btn-sm' id='btn_del' data-id='" + o.id + "'>"
-						+			"<i class='layui-icon'>&#xe640;</i>"
 						+		"</button>"
 						+	"</div>"
 						+"</td>"
@@ -126,21 +137,11 @@ $(document).ready(function(){
 //					layer.closeAll()
 				});
 			})
-			
-			$("#t_datas #btn_del").on('click', function(){
-				var userId = $(this).attr("data-id");
-				
-				layer.confirm('是否删除该用户？(此操作不可恢复，请谨慎操作！)',function(index){
-					del(userId)
-				});
-			})
 		} else{
 			$("#paged").hide();
 			$("#t_datas").html("<br/><span style='width:10%;height:30px;display:block;margin:0 auto;'>暂无数据</span>");
 		}
 	}
-	
-	
 	
 	function toPage(){
    		layui.use('laypage', function(){
@@ -177,7 +178,7 @@ $(document).ready(function(){
 	}
 	
 	function updatePayStatus(id, status){
-		post(BASE_URL + "updatePayStatus",
+		post(getHost() + "sys/order/updatePayStatus",
 		{
 			id : id
 			, orderStatus : status
@@ -190,5 +191,103 @@ $(document).ready(function(){
 		}, function error(err){
 			showToast("更新状态失败，请重试..");
 		})
+	}
+	
+	function fomcatBonusStatus(status){
+		if(status == null || status == undefined){
+			status = "";
+		}
+		if(status == "0"){
+			return "已到账"
+		} else if(status == "1"){
+			return "已计算"
+		} else if(status == "2"){
+			return "退还系统";
+		} else if(status == "3"){
+			return "待处理";
+		}
+		return status;
+	}
+	
+	function fomcatRate(rate){
+		if(status == null || status == undefined){
+			status = "0.00%";
+		}
+		return rate + "%";
+	}
+	
+	$("#btn_calculate").on("click", function(){
+		queryBonusStatus(schemeId)
+	})
+	$("#btn_enter_to_user").on("click", function(){
+		queryBonusStatus(schemeId)
+	})
+	
+	function calculateBonus(schemeId){
+		post(getHost() + "sys/order/calculateBonus",
+		{
+			schemeId : schemeId
+		}, function success(res){
+			showToast(res.msg);
+		}, function error(err){
+			logErr(err)
+			showToast("计算奖金失败，请重试..")
+		})
+	}
+	
+	function distributionBonus(schemeId){
+		post(getHost() + "sys/userMoneyFlow/distributionBonus",
+		{
+			schemeId : schemeId
+		}, function success(res){
+			if(res.code == 0){
+				showToast("分配方案已提交，请耐心等待系统处理")
+			}else{
+				showToast(res.msg);
+			}
+			
+		}, function error(err){
+			logErr(err)
+			showToast("分配奖金失败，请重试..")
+		})
+	}
+	
+	function queryBonusStatus(schemeId){
+		post(getHost() + "sys/scheme/queryBonusStatus", 
+		{
+			id : schemeId
+		}, function success(res){
+			if(res.code == 0){
+				var bonusStatus = res.data;
+				if(bonusStatus == 0){
+					showToast("该方案的奖金已下发给客户，无法修改奖金状态")
+				}else if(bonusStatus == -1){
+					showToast("该方案无人购买，无需修改奖金状态")
+				}else if(bonusStatus == 1){
+					//1奖金已计算，未分配
+					showBonusStatusDialog(schemeId)
+				}else if(bonusStatus == 2){
+					//奖金被退回
+				}else if(bonusStatus == 3){
+					//奖金未计算
+					layer.confirm("是否计算奖金？", function(){
+						calculateBonus(schemeId);
+					});
+				}
+			}else{
+				showToast(res.msg);
+			}
+		}, function error(err){
+			logErr(err)
+			showToast("查询奖金状态失败，请重试..")
+		});
+	}
+	
+	function showBonusStatusDialog(schemeId){
+		layer.confirm("是否计算或分配奖金？", {btn:['重新计算', '奖金分配']}, function(){
+			calculateBonus(schemeId);
+		}, function(){
+			distributionBonus(schemeId);
+		});
 	}
 })

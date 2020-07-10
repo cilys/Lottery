@@ -224,7 +224,7 @@ public class UserImpl {
 
         //提现申请，流水表里增加一条减少可用余额的记录
         boolean f = UserMoneyFlowImpl.addToMoneyFlow(userId, null, null, cashId,
-                applyMoney, SQLParam.SYSTEM, PayType.PAY_APPLY_CASH);
+                applyMoney, SQLParam.SYSTEM, PayType.PAY_APPLY_CASH_REDUCE_LEFT_MONEY);
         if (f){
             return Param.C_SUCCESS;
         }else {

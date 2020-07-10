@@ -2,6 +2,7 @@ package com.cilys.lottery.web.model.impl;
 
 import com.cily.utils.base.StrUtils;
 import com.cily.utils.base.log.Logs;
+import com.cilys.lottery.web.cache1.SchemeInfoCache;
 import com.cilys.lottery.web.cache1.UserInfoCache;
 import com.cilys.lottery.web.conf.*;
 import com.cilys.lottery.web.model.OrderModel;
@@ -309,8 +310,6 @@ public class OrderImpl {
             }
         }
 
-
-
         if (!StrUtils.isEmpty(orderStatus)){
             queryParam.and();
             queryParam.equal(SQLParam.ORDER_STATUS, orderStatus);
@@ -340,6 +339,10 @@ public class OrderImpl {
                     m.setCusertomerName(cusertomerName);
                     m.setOperatorName(operatorName);
                     m.setPayOperatorName(payOperatorName);
+
+                    Integer sId = m.getInt(SQLParam.SCHEME_ID, null);
+
+                    m.setSchemeName(SchemeInfoCache.getSchemeName(sId));
                 }
             }
         }
@@ -354,6 +357,18 @@ public class OrderImpl {
      */
     public static List<OrderModel> queryOrders(int schemeId){
         return OrderModel.queryBySchemeId(schemeId);
+    }
+
+    /**
+     * 查询所有待下发奖金的订单、即已付款、已计算、但奖金未下发给用户的订单
+     * @return
+     */
+    public static List<OrderModel> queryWaitBonusOrders(){
+        return OrderModel.query(StrUtils.join(
+                " " + SQLParam.ORDER_STATUS, " = '", PayStatus.PAYED, "' and ",
+                SQLParam.BONUS_STATUS, " = '", BonusStatus.CALULATED, "' order by ",
+                SQLParam.CREATE_TIME, " desc"
+        ));
     }
 
     /**
@@ -382,17 +397,22 @@ public class OrderImpl {
             if (BigDecimalUtils.noMoreThan(totalPayedMoney, bd0)){
                 return false;
             }
+            BigDecimal bd100 = BigDecimalUtils.toBigDecimal("100.00");
             for (OrderModel m : ls){
                 BigDecimal payed = m.getBigDecimal(SQLParam.MONEY);
                 //计算出资人的出资比例
                 if (BigDecimalUtils.moreThan(payed, bd0)){
 //                    BigDecimal rate = BigDecimalUtils.divide(payed, totalPayedMoney, true);
+
                     BigDecimal n = BigDecimalUtils.multiply(canUseBonus, payed, true);
                     BigDecimal bonus = BigDecimalUtils.divide(n, totalPayedMoney);
 
-                    BigDecimal rate = BigDecimalUtils.divide(payed, totalPayedMoney);
+
+                    BigDecimal r = BigDecimalUtils.multiply(payed, bd100, true);
+                    BigDecimal rate = BigDecimalUtils.divide(r, totalPayedMoney);
+
                     if (BigDecimalUtils.noMoreThan(rate, BigDecimalUtils.zero())){
-                        rate = BigDecimalUtils.toBigDecimal("0.01");
+                        rate = BigDecimalUtils.toBigDecimal("0.0001");
                     }
                     m.set(SQLParam.PAYED_RATE, rate);
                     m.set(SQLParam.BONUS_MONEY, bonus);
@@ -417,6 +437,12 @@ public class OrderImpl {
         if (m == null){
             return false;
         }
+        String payStatus = m.getStr(SQLParam.ORDER_STATUS);
+        if (!PayStatus.PAYED.equals(payStatus)){
+            //未付款的订单，不可分奖金
+            return false;
+        }
+
         String bonusStatus = m.getStr(SQLParam.BONUS_STATUS);
         if (!BonusStatus.CALULATED.equals(bonusStatus)){
             return false;
@@ -429,7 +455,7 @@ public class OrderImpl {
         }
         m.set(SQLParam.BONUS_STATUS, BonusStatus.BEEN_TO_USER);
         if (OrderModel.updateBonusStatus(m)){
-            return UserMoneyFlowImpl.addToMoneyFlow(m.getStr(SQLParam.USER_ID), m.getInt(SQLParam.SCHEME_ID),
+            return UserMoneyFlowImpl.addToMoneyFlow(m.getStr(SQLParam.CUSTOMER_ID), m.getInt(SQLParam.SCHEME_ID),
                     m.getInt(SQLParam.ID), bonusMoney, SQLParam.SYSTEM, PayType.PAY_SYSTEM_BONUS);
         }
         return false;
@@ -459,6 +485,4 @@ public class OrderImpl {
         }
         return String.valueOf(status);
     }
-
-
 }

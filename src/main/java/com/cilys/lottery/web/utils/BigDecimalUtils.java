@@ -111,6 +111,20 @@ public class BigDecimalUtils {
         return b;
     }
 
+    public static BigDecimal divide(BigDecimal b1, BigDecimal b2, int scale){
+        if (equal(b2, zero())){
+            return b1;
+        }
+
+        BigDecimal b = b1.divide(b2, scale < 0 ? 0 : scale, BigDecimal.ROUND_DOWN);
+//        if (sourceResult){
+//
+//        }else {
+//            b = setScale(b);
+//        }
+        return b;
+    }
+
     public static boolean equal(BigDecimal b1, BigDecimal b2){
         if (b1 == null || b2 == null){
             return false;

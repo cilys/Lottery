@@ -51,6 +51,13 @@ public class ScheduUtils {
                 ThreadPools.executeTask(new SyncUserInfoRunnable());
             } else if (TaskType.SYNC_SCHEME_SELLED_AND_PAYED_MONEY.equals(taskType)){
                 ThreadPools.executeTask(new SyncSchemeSelledAndPayedMoneyRunnable());
+            } else if (TaskType.SYNC_SCHEME_BONUS_ADD_USER_MONEY_FLOW.equals(taskType)){
+                Object data = task.getData();
+                if (data != null && data instanceof Integer){
+                    ThreadPools.executeTask(new SchemeOrderBonusAddToUserMoneyFlowRunnable((Integer)data));
+                }else {
+                    ThreadPools.executeTask(new SchemeOrderBonusAddToUserMoneyFlowRunnable());
+                }
             }
         }
     }

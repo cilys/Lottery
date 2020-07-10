@@ -138,11 +138,17 @@ public class OrderModel extends BaseModel<OrderModel> {
         map.put("cusertomerName", cusertomerName);
         map.put("operatorName", operatorName);
         map.put("payOperatorName", payOperatorName);
+        map.put("schemeName", schemeName);
         return map;
     }
     private String cusertomerName;
     private String operatorName;
     private String payOperatorName;
+    private String schemeName;
+
+    public void setSchemeName(String schemeName) {
+        this.schemeName = schemeName;
+    }
 
     public void setCusertomerName(String cusertomerName) {
         this.cusertomerName = cusertomerName;

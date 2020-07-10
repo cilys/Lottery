@@ -60,5 +60,11 @@ function fomcatPayType(payType){
 	if(payType == 9){
 		return "所得奖金";
 	}
+	if(payType == 10){
+		return "提现成功";
+	}
+	if(payType == 11){
+		return "拒绝提现";
+	}
 	return payType;
 }
