@@ -3,6 +3,7 @@ package com.cilys.lottery.web.controller;
 import com.cily.utils.base.StrUtils;
 import com.cily.utils.base.time.TimeUtils;
 import com.cilys.lottery.web.conf.SQLParam;
+import com.cilys.lottery.web.model.SchemeModel;
 import com.cilys.lottery.web.model.impl.SchemeImpl;
 
 /**
@@ -33,5 +34,10 @@ public class SchemeController extends BaseController {
 //                currentTime, outTimeType, orderColunm, order));
         renderJsonSuccess(SchemeImpl.query(getPageNumber(), getPageSize(), status,
                 currentTime, outTimeType, name, orderColunm, order));
+    }
+
+    public void queryById(){
+        Integer id = getInt(SQLParam.ID, -1);
+        renderJsonSuccess(SchemeModel.queryById(id));
     }
 }

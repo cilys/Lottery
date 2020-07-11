@@ -86,7 +86,15 @@ public class UserMoneyFlowImpl {
      * @throws Exception
      */
     public static boolean updateUserLeftMoney() throws Exception {
-        UserMoneyFlowModel m = UserMoneyFlowModel.queryFirst(getQueueNoneOfAddToUser());
+//        UserMoneyFlowModel m = UserMoneyFlowModel.queryFirst(getQueueNoneOfAddToUser());
+        List<UserMoneyFlowModel> ls = UserMoneyFlowModel.query(getQueueNoneOfAddToUser());
+        UserMoneyFlowModel m = null;
+        if (ls != null && ls.size() > 0) {
+            m = ls.get(0);
+            if (ls.size() > 1) {
+                ScheduUtils.putTask(TaskBean.syncUserMoneyFlowToUser());
+            }
+        }
         return updateUserLeftMoney(m);
     }
 
