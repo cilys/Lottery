@@ -1,5 +1,6 @@
 package com.cilys.lottery.web.controller;
 
+import com.cily.utils.base.StrUtils;
 import com.cily.utils.base.log.Logs;
 import com.cilys.lottery.web.cache1.UserInfoCache;
 import com.cilys.lottery.web.conf.Param;
@@ -41,34 +42,34 @@ public class UserController extends BaseController {
     }
 //
 //    @Before({PwdInterceptor.class})
-//    public void changePwd(){
-//        String pwd = getParam(SQLParam.PWD);
-//        String newPwd = getParam("newPwd");
-//        if (StrUtils.isEmpty(newPwd)){
-//            renderJsonFailed(Param.C_PWD_NEW_NULL, null);
-//            return;
-//        }
-//        if (newPwd.length() > 32){
-//            renderJsonFailed(Param.C_PWD_ILLAGLE, null);
-//            return;
-//        }
-//        String userId = getUserId();
-//        UserModel um = UserModel.getUserByUserId(userId);
-//        if (um == null){
-//            renderJsonFailed(Param.C_USER_NOT_EXIST, null);
-//            return;
-//        }
-//        if (!pwd.equals(um.get(SQLParam.PWD))){
-//            renderJsonFailed(Param.C_PWD_NOT_EQUAL, null);
-//            return;
-//        }
-//        if (UserModel.updateUserInfo(userId, newPwd, null, null,
-//                null, null, null, null, null) == UserModel.USER_INFO_UPDATE_SUCCESS){
-//            renderJsonSuccess(null);
-//        }else {
-//            renderJsonFailed(Param.C_PWD_CHANGE_FAILED, null);
-//        }
-//    }
+    public void changePwd(){
+        String pwd = getParam(SQLParam.PWD);
+        String newPwd = getParam("newPwd");
+        if (StrUtils.isEmpty(newPwd)){
+            renderJsonFailed(Param.C_PWD_NEW_NULL, null);
+            return;
+        }
+        if (newPwd.length() > 32){
+            renderJsonFailed(Param.C_PWD_ILLAGLE, null);
+            return;
+        }
+        String userId = getUserId();
+        UserModel um = UserModel.getUserByUserId(userId);
+        if (um == null){
+            renderJsonFailed(Param.C_USER_NOT_EXIST, null);
+            return;
+        }
+        if (!pwd.equals(um.get(SQLParam.PWD))){
+            renderJsonFailed(Param.C_PWD_NOT_EQUAL, null);
+            return;
+        }
+        if (UserModel.updateUserInfo(userId, newPwd, null, null,
+                null, null, null, null, null) == UserModel.USER_INFO_UPDATE_SUCCESS){
+            renderJsonSuccess(null);
+        }else {
+            renderJsonFailed(Param.C_PWD_CHANGE_FAILED, null);
+        }
+    }
 
     @Clear({LoginedInterceptor.class})
     public void login(){
@@ -141,14 +142,16 @@ public class UserController extends BaseController {
         }
     }
 
-    public void updateUserInfo(){
+    public void updateInfo(){
 //        UserUtils.updateUserInfoByJsonData(this, getUserId());
         try {
             String str = HttpKit.readData(getRequest());
             LogUtils.info(getClass().getSimpleName(), null, getRequest().getRequestURI(), str, getUserId());
             Map<String, Object> params = ParamUtils.parseJson(str);
 
-            String result = UserImpl.updateUserInfo(params, getParam(SQLParam.USER_ID));
+            params.remove(SQLParam.LEFT_MONEY);
+
+            String result = UserImpl.updateUserInfo(params, getUserId());
 
             if (Param.C_SUCCESS.equals(result)) {
                 UserInfoCache.clearUserCache();
