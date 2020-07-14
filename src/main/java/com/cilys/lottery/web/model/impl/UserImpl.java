@@ -3,6 +3,8 @@ package com.cilys.lottery.web.model.impl;
 import com.cily.utils.base.StrUtils;
 import com.cily.utils.base.UUIDUtils;
 import com.cily.utils.base.log.Logs;
+import com.cily.utils.base.time.TimeType;
+import com.cily.utils.base.time.TimeUtils;
 import com.cilys.lottery.web.conf.Param;
 import com.cilys.lottery.web.conf.PayType;
 import com.cilys.lottery.web.conf.SQLParam;
@@ -31,6 +33,7 @@ public class UserImpl {
         //初始增加用户，则没有资金余额
         um.remove(SQLParam.LEFT_MONEY);
         um.set(SQLParam.USER_ID, UUIDUtils.getUUID());
+        um.set(SQLParam.CREATE_TIME, TimeUtils.milToStr(System.currentTimeMillis(), null));
 
         if (UserModel.getUserByUserName(um.getStr(SQLParam.USER_NAME)) != null){
             return Param.C_RESIGT_USER_EXISTS;

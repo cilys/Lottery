@@ -76,9 +76,11 @@ public class SysUserController extends BaseController {
         if (realName != null){
             realName = realName.trim();
         }
+        String sortColumn = getParam(SQLParam.SORT_COLUMN, SQLParam.CREATE_TIME);
+        String order = getParam(SQLParam.SORT, SQLParam.DESC);
 
         renderJsonSuccess(UserModel.getUsersByStatus(getParam(SQLParam.STATUS),
-                getPageNumber(), getPageSize(), null, "asc", !"1".equals(osType), realName));
+                getPageNumber(), getPageSize(), sortColumn, order, !"1".equals(osType), realName));
     }
 
     public void getUserCount(){

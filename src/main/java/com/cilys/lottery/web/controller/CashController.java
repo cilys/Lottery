@@ -84,10 +84,11 @@ public class CashController extends BaseController {
         if (sql.startsWith("and")) {
             sql = sql.replaceFirst("and", "");
         }
+        String order = "";
         if (!StrUtils.isEmpty(sortColumn) && !StrUtils.isEmpty(sort)){
-            sql = sql + " order by " + sortColumn + " " + sort;
+            order = " order by " + sortColumn + " " + sort;
         }
-        renderJsonSuccess(CashImpl.query(getPageNumber(), getPageSize(), sql));
+        renderJsonSuccess(CashImpl.query(getPageNumber(), getPageSize(), sql, order));
     }
 
     protected String getCustomerId(String headerUser, String paramUserId){

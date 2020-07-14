@@ -103,8 +103,8 @@ public class CashImpl {
         }
     }
 
-    public static Page<CashModel> query(int pageNumber, int pageSize, String queryWhere){
-        Page<CashModel> result = CashModel.query(pageNumber, pageSize, queryWhere);
+    public static Page<CashModel> query(int pageNumber, int pageSize, String queryWhere, String order){
+        Page<CashModel> result = CashModel.query(pageNumber, pageSize, queryWhere, order);
         if (result != null){
             if (result.getList() != null){
                 for (CashModel m : result.getList()) {

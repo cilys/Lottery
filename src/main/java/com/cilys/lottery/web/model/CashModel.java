@@ -37,13 +37,23 @@ public class CashModel extends BaseModel<CashModel> {
         return dao.findById(id);
     }
 
-    public static Page<CashModel> query(int pageNumber, int pageSize, String queryWhere){
+    public static Page<CashModel> query(int pageNumber, int pageSize, String queryWhere, String order){
         if (StrUtils.isEmpty(queryWhere)){
-            return dao.paginate(pageNumber, pageSize, "select * ",
-                    " from " + SQLParam.T_CASH);
+            if (StrUtils.isEmpty(order)) {
+                return dao.paginate(pageNumber, pageSize, "select * ",
+                        " from " + SQLParam.T_CASH);
+            }else {
+                return dao.paginate(pageNumber, pageSize, "select * ",
+                        " from " + SQLParam.T_CASH + " " + order);
+            }
         }else {
-            return dao.paginate(pageNumber, pageSize, "select * ",
-                    " from " + SQLParam.T_CASH + " where " + queryWhere);
+            if (StrUtils.isEmpty(order)) {
+                return dao.paginate(pageNumber, pageSize, "select * ",
+                        " from " + SQLParam.T_CASH + " where " + queryWhere);
+            } else {
+                return dao.paginate(pageNumber, pageSize, "select * ",
+                        " from " + SQLParam.T_CASH + " where " + queryWhere + " " + order);
+            }
         }
     }
 
