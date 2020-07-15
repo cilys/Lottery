@@ -149,6 +149,8 @@ $(document).ready(function(){
 		            	del(userId)
 		        	});
 			})
+
+            $("#paged").show();
 		} else{
 			$("#paged").hide();
 			$("#t_user_list").html("<br/><span style='width:10%;height:30px;display:block;margin:0 auto;'>暂无数据</span>");

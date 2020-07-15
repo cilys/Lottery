@@ -95,6 +95,7 @@ $(document).ready(function(){
 				showDialog("审批/拒绝申请", "./cash_edit.html?params=" + encodeURI(params));
 				
 			})
+            $("#paged").show();
 		} else{
 			$("#paged").hide();
 			$("#t_datas").html("<br/><span style='width:10%;height:30px;display:block;margin:0 auto;'>暂无数据</span>");

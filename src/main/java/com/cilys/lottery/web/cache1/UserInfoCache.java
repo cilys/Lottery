@@ -45,6 +45,10 @@ public class UserInfoCache {
 
         if (cacheUserMap != null && cacheUserMap.size() > 0){
             UserModel m = cacheUserMap.get(userId);
+            if (m == null){
+                return null;
+            }
+
             String realName = m.getStr(SQLParam.REAL_NAME);
             if (!StrUtils.isEmpty(realName)){
                 return realName;

@@ -1,6 +1,7 @@
 function login(res){
 	if(res == 'undefined'){
-		pHref("./login.html");
+		// pHref("./login.html");
+		clearCookie();
 		return false;
 	}
 	var code = res.code;
@@ -8,12 +9,12 @@ function login(res){
 	if(code == "1002"){
 		//1002用户未登录
 		clearCookie();
-		pHref("./login.html");
+		// pHref("./login.html");
 		return false;
 	}else if(code == "1003"){
 		//1003登录已过期
 		clearCookie();
-		pHref("./login.html");
+		// pHref("./login.html");
 		
 		return false;
 	}else{
@@ -53,7 +54,7 @@ function unlogin(){
 function clearCookie(){
 	window.localStorage.removeItem("token");
 	window.localStorage.removeItem("userId");
-	window.localStorage.removeItem("userIdentify");
+	// window.localStorage.removeItem("userIdentify");
 	window.localStorage.removeItem("realName");
 }
 

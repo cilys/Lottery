@@ -93,6 +93,8 @@ $(document).ready(function(){
 				$("#input_id").val(data.id);
 				
 			})
+
+            $("#paged").show();
 		} else{
 			$("#paged").hide();
 			$("#t_datas").html("<br/><span style='width:10%;height:30px;display:block;margin:0 auto;'>暂无数据</span>");

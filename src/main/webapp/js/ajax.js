@@ -12,12 +12,12 @@ function post(url, data, sus, err){
 			request.setRequestHeader("token", window.localStorage.getItem("token"));
 		},
 		success: function(re){
-//			if(login(re)){
-//				sus(re);
-//			}else{
-//				log("未登陆或登陆已过期")
-//				pHref("./login.html");
-//			}
+			if(login(re)){
+				sus(re);
+			}else{
+				log("未登陆或登陆已过期")
+				pHref("./login.html");
+			}
 			sus(re);
 		},
 		error: function(er){
