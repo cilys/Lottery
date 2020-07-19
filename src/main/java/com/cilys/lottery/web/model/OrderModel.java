@@ -25,13 +25,16 @@ public class OrderModel extends BaseModel<OrderModel> {
         return dao.find("select * from " + SQLParam.T_ORDER);
     }
 
-    public static Page<OrderModel> query(int pageNumber, int pageSize, String whereParam){
+    public static Page<OrderModel> query(int pageNumber, int pageSize, String whereParam, String sortParam){
+        if (StrUtils.isEmpty(sortParam)){
+            sortParam = "";
+        }
         if (whereParam != null && whereParam.length() > 0){
             return dao.paginate(pageNumber, pageSize, "select * ",
-                    StrUtils.join(" from ", SQLParam.T_ORDER, " where ", whereParam));
+                    StrUtils.join(" from ", SQLParam.T_ORDER, " where ", whereParam, " ", sortParam));
         }else {
             return dao.paginate(pageNumber, pageSize, "select * ",
-                    StrUtils.join(" from ", SQLParam.T_ORDER));
+                    StrUtils.join(" from ", SQLParam.T_ORDER, " ", sortParam));
         }
     }
 

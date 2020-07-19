@@ -63,9 +63,11 @@ public class OrderController extends BaseController {
         String payType = getParam(SQLParam.PAY_TYPE);
         int schemeId = getInt(SQLParam.SCHEME_ID, -1);
         String customerId = getParam(SQLParam.CUSTOMER_ID, null);
+        String sortColumn = getParam(SQLParam.SORT_COLUMN, SQLParam.CREATE_TIME);
+        String sort = getParam(SQLParam.SORT, SQLParam.DESC);
 
         renderJsonSuccess(OrderImpl.query(schemeId, customerId, orderStatus,
-                payType, getPageNumber(), getPageSize()));
+                payType, getPageNumber(), getPageSize(), sortColumn, sort));
     }
 
 

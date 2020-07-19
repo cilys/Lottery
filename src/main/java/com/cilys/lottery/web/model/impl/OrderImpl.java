@@ -295,7 +295,7 @@ public class OrderImpl {
      * @return
      */
     public static Page<OrderModel> query(int schemeId, String userId, String orderStatus, String payType,
-                                         int pageNumber, int pageSize){
+                                         int pageNumber, int pageSize, String sortColumn, String sort){
         QueryParam queryParam = new QueryParam();
         if (schemeId < 0){
             if (!StrUtils.isEmpty(userId)){
@@ -323,7 +323,14 @@ public class OrderImpl {
                 queryParam.equal(SQLParam.PAY_TYPE, payType);
             }
         }
-        Page<OrderModel> datas = OrderModel.query(pageNumber, pageSize, queryParam.string());
+        String sortParam = null;
+        if (!StrUtils.isEmpty(sortColumn)){
+            if (StrUtils.isEmpty(sort)){
+                sort = SQLParam.DESC;
+            }
+            sortParam = " order by " + sortColumn + " " + sort;
+        }
+        Page<OrderModel> datas = OrderModel.query(pageNumber, pageSize, queryParam.string(), sortParam);
         if (datas != null){
             List<OrderModel> ls = datas.getList();
             if (ls != null && ls.size() > 0){
