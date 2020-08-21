@@ -269,6 +269,9 @@ public class OrderImpl {
             if (RootUserIdUtils.isRootUser(headUserId)) {
                 orderStatus = sm.getStr(SQLParam.ORDER_STATUS);
             }
+            if (StrUtils.isEmpty(orderStatus)) {
+                orderStatus = SQLParam.STATUS_DISABLE;
+            }
 
             sm.set(SQLParam.ORDER_STATUS, orderStatus);
 
